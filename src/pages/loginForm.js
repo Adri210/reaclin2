@@ -1,31 +1,114 @@
 import React from 'react';
-import '../styles/index.css';
 import '../styles/loginForm.css';
 import logo from '../imagens/logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { auth } from '../firebaseConection'; 
+import { useNavigate } from 'react-router-dom';
+
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from 'firebase/auth';
 
 const LoginForm = () => {
-  return (
-    <body>
-    <main className="d-flex h-100">
-      <form className="formulario">
-        <img src={logo} alt="Logotipo Real Clin" className="mobile-logo" />
-        <h1>Entrar</h1>
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Senha" />
-        <a href="#" className="link-dois">Esqueci minha senha</a>
-        <Link to='/Usuario' className="botao-entrar">Entrar</Link>
-        <div className="paragrafo">
-          <p className="m-0">Não tem uma conta?</p>
-          <a href="#">Cadastrar</a>
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const navigate = useNavigate();
+
+  const [usuario, setUsuario] = useState(false);
+  const [detalhesUsuario, setDetalhesUsuario] = useState({});
+
+  useEffect(()=>{
+    async function verificarLogin() {
+      
+      onAuthStateChanged(auth, (user) =>{
+        if(user){
+
+          setUsuario(true);
+          setDetalhesUsuario({
+            uid: user.uid,
+            email: user.email
+          })}
+          else {
+
+            setUsuario(false);
+            setDetalhesUsuario({});
+          }
+      
+      })
+      
+    }
+    verificarLogin();
+  },[])
+   
+  
+  async function logarUsuario(){
+    await signInWithEmailAndPassword(auth, email, senha)
+    .then((value)=>{
+      alert("Usuário logada com sucesso")
+      setUsuario(true);
+      setDetalhesUsuario({
+        uid:value.user.uid,
+        email: value.user.email,
+      })
+      setEmail("");
+      setEmail("");
+
+      navigate('/Usuario');
+    })
+    .catch(()=>{
+      alert("Erro ao fazer login!")
+    })
+  }
+
+
+  return(
+    <div>
+      
+    <div className="container">
+      <div className="form-container sign-in">
+
+    <h2>Usuários</h2>
+    <br/>
+    <label>Email:</label>
+    <input
+      type="email"
+      placeholder="Digite um email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+    />
+
+    <label>Senha:</label>
+    <input
+      type="password"
+      placeholder="Digite uma senha"
+      value={senha}
+      onChange={(e) => setSenha(e.target.value)}
+    />
+              <a className="esqueci" href="#">Esqueci a senha</a>
+    <button onClick={logarUsuario}>Entrar</button>
+    <p></p>
+    <div className="paragrafo">
+          Não tem uma conta?
+          <Link to="/cadastrar">Cadastrar</Link>
         </div>
-      </form>
-      <div className="logo">
-        <img src={logo} alt="Logotipo Real Clin" />
       </div>
-    </main>
-    </body>
+ 
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                  <div className="logo">
+                  <img src={logo} alt="Logotipo Real Clin" />
+                  </div>
+                </div>
+            </div>
+        </div>   
+     </div>
+  </div>
+  
   );
 };
 

@@ -5,6 +5,7 @@ import Estagiarios from './pages/Estagiarios';
 import Prontuario from './pages/Prontuarios';
 import Usuario from './pages/Usuario';
 import Agenda from './pages/Agenda';
+import Cadastrar from "./pages/cadastrar";
 
 
 
@@ -18,6 +19,7 @@ function RoutesApp() {
                 <Route path="/Prontuario" element={<Prontuario />} />
                 <Route path="/Usuario" element={<Usuario />} />
                 <Route path="/Agenda" element={<Agenda />} />
+                <Route path="/cadastrar" element={<Cadastrar />} />
             </Routes>
         </BrowserRouter>
     );
