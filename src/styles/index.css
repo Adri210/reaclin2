@@ -13,12 +13,86 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  
 }
 
 ul {
   list-style: none;
 }
 
+.tabela-grande th, .tabela-grande td {
+  padding-left: 100px; 
+  padding-right: 100px; 
+}
+
+.search-icon{
+  padding-top: 5px;
+}
+.search-users {
+  padding-left: 10px;
+  padding-right: 10px;
+  max-width: 1370px;  
+}
+
+.custom-input {
+  width: 100%;
+  max-width: 400px; 
+}
+
+.search-users h3 {
+  margin: 0;
+  padding-right: px; 
+}
+
 @media (max-width: 500px) {
 
 }
+
+@media(max-width: 768px) {
+  .cadastro {
+    justify-content: flex-start;
+    gap: 1.5rem;
+  }
+
+  .cadastro-dois {
+    width: 100% !important;
+    height: 85% !important;
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  #titulo {
+    display: none;
+  }
+
+  #titulo-2 {
+    font-size: 16px;
+  }
+
+  .img-perfil {
+    margin-bottom: 0;
+  }
+
+  #botao-salvar {
+    margin: 0;
+  }
+
+}
+
+@media(max-width: 500px) {
+  table {
+    margin-bottom: 1rem;
+  }
+}
+
+@media(max-width: 360px) {
+  table {
+    margin-bottom: 0.8rem;
+  }
+
+  input {
+    font-size: 12px;
+    padding: 5px 15px !important;
+  }
+} 
+

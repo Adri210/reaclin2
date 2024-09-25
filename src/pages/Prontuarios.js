@@ -39,9 +39,8 @@ const Prontuario = () => {
           <Header />
           {!showForm ? (
             <>
-          
-          <div class="d-flex align-items-center search-users">
-          <h3 class="p-3">Prontuários</h3>
+          <div class="d-flex align-items-center search-users ">
+          <h3 class="p-3 ">Prontuários</h3>
           <div class="position-relative">
             <input type="text" class="custom-input  border border-1 rounded-5 ps-2 pe-4"/>
             <i class="fas fa-search position-absolute search-icon"></i>
@@ -49,27 +48,28 @@ const Prontuario = () => {
 
         </div>
 
-          
-              <table className="table table-hover">
-                <thead>
-                  <tr className="cor">
-                    <th scope="col">Nome</th>
-                    <th scope="col">Nº do Prontuário</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Data</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {prontuarios.map((prontuario, index) => (
-                    <tr key={index}>
-                      <td>{prontuario.nome}</td>
-                      <td>{prontuario.numero}</td>
-                      <td>{prontuario.status}</td>
-                      <td>{prontuario.data}</td>
+        <div className="container-fluid">
+            <table className="table table-hover tabela-grande " style={{ borderRadius: '10px', overflow: 'hidden' }}>
+                  <thead>
+                    <tr className="cor">
+                      <th scope="col">Nome</th>
+                      <th scope="col">Nº do Prontuário</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Data</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {prontuarios.map((prontuario, index) => (
+                      <tr key={index}>
+                        <td>{prontuario.nome}</td>
+                        <td>{prontuario.numero}</td>
+                        <td>{prontuario.status}</td>
+                        <td>{prontuario.data}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+            </table>
+          </div>
               <button className="rounded-2" id="custom-btn" onClick={() => setShowForm(true)}>
                 Adicionar
               </button>

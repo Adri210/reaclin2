@@ -1,3 +1,7 @@
+.sidebar{
+  background-color: #FFF;
+}
+
 .mobile-header {
   display: none;
   width: 100vw !important;
@@ -97,6 +101,24 @@
   bottom: 0;
 }
 
+.icon{
+  padding-left: 5px;
+}
+
+.sidebar .nav-link {
+  color: #000; 
+  padding: 10px;
+}
+
+.sidebar .nav-link.active {
+  border-radius: 5px;
+  padding-left: 10px;
+  color: white !important;
+}
+
+.sidebar .nav-link.active img {
+  filter: brightness(0) invert(1); 
+}
 
 @media(max-width: 768px) {
   .mobile-header .menu {

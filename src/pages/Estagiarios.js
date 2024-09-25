@@ -38,14 +38,14 @@ const Estagiarios = () => {
           <Header />
           {!showForm ? (
             <>
-              <div className="d-flex align-items-center search-users">
-                <h3 className="p-3 m-0">Estagiários</h3>
+              <div className="d-flex align-items-center search-users ">
+                <h3 className="p-3 m-0  ">Estagiários</h3>
                 <div className="position-relative">
                   <input type="text" className="custom-input border border-1 rounded-5 ps-2 pe-4" />
                   <i className="fas fa-search position-absolute search-icon"></i>
                 </div>
               </div>
-              <table className="table table-hover">
+              <table className="table table-hover tabela " style={{ borderRadius: '10px', overflow: 'hidden' }}>
                 <thead>
                   <tr className="cor">
                     <th scope="col">Nome</th>
