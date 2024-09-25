@@ -1,147 +1,55 @@
-.cadastro {
-  background-color: #BDB8B8;
-  width: 100%;
-  height: 100vh;
+.calendar-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
 }
 
-.cadastro-dois {
-  background-color: #fff;
-  border-radius: 10px;
-  width: 40rem;
-  height: 40rem;
+.hamburger-menu {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  cursor: pointer;
 }
 
-.custom-btn {
-  background-color: #0d6efd;
-  color: #fff;
-}
-
-.search-icon {
-  top: 20%;
-  right: 15px;
-}
-
-.flag {
-  background-color: #027cb55e;
-  color: #3b71e4;
-  border-radius: 5px;
-  padding: 0 15px;
-}
-
-.calendar-container {
-  display: grid;
-  grid-template: 50px repeat(6, 1fr) / repeat(7, 1fr);
+.sidebar {
+  width: 0;
+  transition: width 0.3s ease;
   overflow: hidden;
-  width: 100%;
-  height: 85%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: white;
+  z-index: 999;
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
-.other-day,
-.day {
-  border: 1px solid #DBDCDE;
+.sidebar.open {
+  width: 300px; /* Largura do calendário menor quando aberto */
 }
 
-.other-day {
-  color: #89868D;
-  background-color: #FAFBFF;
+.main-calendar {
+  margin-left: 20px;
+  flex-grow: 1;
 }
 
-.title {
-  background-color: #F4F5F9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+button {
+  margin-bottom: 20px;
+  background-color: #42a5f5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
-.color-1,
-.color-2,
-.color-3,
-.color-4 {
-  text-align: center;
-  width: 100%;
-  font-size: 14px;
+button:hover {
+  background-color: #1e88e5;
 }
 
-.color-1 {
-  background-color: #0107ba5c;
-  border-left: 3px solid #0106BA;
-  color: #0106BA;
+.sx-react-calendar-wrapper {
+  width: 1200px;
+  max-width: 100vw;
+  height: 800px;
+  max-height: 90vh;
 }
-
-.color-2{
-  background-color: #fbbd054a;
-  border-left: 3px solid #FBBC05;
-  color: #FBBC05;
-}
-
-.color-3 {
-  background-color: #008fd15d;
-  border-left: 3px solid #008FD1;
-  color: #008FD1;
-}
-
-.color-4 {
-  background-color: #f41e1e4c;
-  border-left: 3px solid #F41E1E;
-  color: #F41E1E
-}
-
-@media (max-width: 500px) {
-  .cadastro {
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
-  .cadastro-dois {
-    width: 20rem;
-    height: 28rem;
-    margin-top: 12rem;
-  }
-
-
-
-  .search-icon {
-    right: -8px;
-  }
-
-  .custom-btn,
-  .flag {
-    font-size: 12px;
-  }
-
-  .calendar-container {
-    grid-template: 30px repeat(6, 1fr) / repeat(7, 1fr);
-    overflow: hidden;
-    width: 100%;
-    height: 85%;
-  }
-
-  .color-one,
-  .color-two,
-  .color-three,
-  .color-four {
-    font-size: 10px;
-  }
-}
-
-@media (max-width: 768px) {
-  .cadastro {
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
-  .cadastro-dois {
-    margin-top: 12rem;
-  }
-
-  .mobile-logo{
-    position: relative;
-    top: 10%;
-    left: 35%;
-    
-  }
-}
-

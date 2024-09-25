@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Sidebar from '../componentes/sidebar';
-import Header from '../componentes/Header';
+import Sidebar from '../componentes/sidebar.js';
+import Header from '../componentes/Header.js';
 import '../styles/usuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

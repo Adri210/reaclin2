@@ -4,7 +4,7 @@ import logo from '../imagens/logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { auth } from '../firebaseConection'; 
+import { auth } from '../firebaseConection.js'; 
 import { useNavigate } from 'react-router-dom';
 
 import {

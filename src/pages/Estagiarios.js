@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../componentes/sidebar';
-import Header from '../componentes/Header';
+import Sidebar from '../componentes/sidebar.js';
+import Header from '../componentes/Header.js';
 import '../styles/estagiario.css';
-import AdicionarEstagiario from './adicionar2';
+import AdicionarEstagiario from './adicionar2.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 

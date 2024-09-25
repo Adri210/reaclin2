@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../componentes/sidebar';
-import Header from '../componentes/Header';
+import Sidebar from '../componentes/sidebar.js';
+import Header from '../componentes/Header.js';
 import '../styles/index.css';
 import '../styles/estagiario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Adicionar from './adicionar';
+import Adicionar from './adicionar.js';
 
 const Prontuario = () => {
   const [prontuarios, setProntuarios] = useState([

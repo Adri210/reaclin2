@@ -1,4 +1,4 @@
-import { auth } from '../firebaseConection'; 
+import { auth } from '../firebaseConection.js'; 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { Link } from 'react-router-dom';
