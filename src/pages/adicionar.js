@@ -24,9 +24,7 @@ const Adicionar = ({ adicionarProntuario }) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <Sidebar />
         <div className="col cadastro">
-          <Header />
           <div className="cadastro-dois">
             <div>
               <h3 id="titulo-dois">Adicionar Prontuario</h3>
@@ -69,6 +67,7 @@ const Adicionar = ({ adicionarProntuario }) => {
 
                 <li className="lista-form col-md-6 col-sm-12">
                   <span>Data</span>
+                  <br/>
                   <input
                     type="date"
                     name="data"

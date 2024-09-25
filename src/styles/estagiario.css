@@ -7,8 +7,7 @@
 }
 
 .search-users {
-  background-color: #fff !important ;
-  
+  background-color: #FFF !important ;
 }
 
 .search-icon {
@@ -29,6 +28,12 @@
   background-color: #0d6efd;
   color: #fff;
   padding: 5px 10px;
+}
+
+
+.tabela th, .tabela td {
+  padding-left: 95px; 
+  padding-right: 95px;  
 }
 
 @media(min-width: 1048px) {

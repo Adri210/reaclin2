@@ -19,6 +19,7 @@ const Usuario = () => {
             <h3 id="titulo-dois">Editar Perfil de funcionário</h3>
             <div className="img-perfil">
               <img src={perfil} alt="Foto de Perfil"/>
+              <br/>
               <p className="m-0">Foto de Perfil</p>
             </div>
           </div>
@@ -28,6 +29,7 @@ const Usuario = () => {
 
             <li className="lista-form col-md-6 col-sm-12">
               <span>Nome</span>
+              <br/>
               <input type="text"/>
             </li>
 
@@ -38,6 +40,7 @@ const Usuario = () => {
 
             <li className="lista-form col-md-6 col-sm-12">
               <span>Email</span>
+              <br/>
               <input type="email"/>
             </li>
 
@@ -48,11 +51,13 @@ const Usuario = () => {
 
             <li className="lista-form col-md-6 col-sm-12">
               <span>Celular</span>
+              <br/>
               <input type="text"/>
             </li>
 
             <li className="lista-form col-md-6 col-sm-12">
               <span>Função</span>
+              <br/>
               <input type="text"/>
             </li>
           </div>
