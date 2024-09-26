@@ -1,5 +1,4 @@
 
-.calendar-wrapper {
 .cadastro {
   background-color: #c9d6ff;
   width: 100%;
@@ -14,23 +13,6 @@
   left: 10px;
   z-index: 1000;
   cursor: pointer;
-}
-
-.sidebar {
-  width: 0;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  background-color: white;
-  z-index: 999;
-  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
-}
-
-.sidebar.open {
-  width: 300px; /* Largura do calendário menor quando aberto */
 }
 
 .main-calendar {
