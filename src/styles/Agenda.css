@@ -1,4 +1,9 @@
+
 .calendar-wrapper {
+.cadastro {
+  background-color: #c9d6ff;
+  width: 100%;
+  height: 100vh;
   display: flex;
   position: relative;
 }

@@ -24,9 +24,7 @@ const AdicionarEstagiario = ({ adicionarEstagiario }) => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <Sidebar />
         <div className="col cadastro">
-          <Header />
           <div className="cadastro-dois">
             <div>
               <h3 id="titulo-dois">Adicionar Estagiário</h3>
@@ -36,6 +34,7 @@ const AdicionarEstagiario = ({ adicionarEstagiario }) => {
               <div className="row">
                 <li className="lista-form col-md-6 col-sm-12">
                   <span>Nome</span>
+                  <br/>
                   <input
                     type="text"
                     name="nome"
@@ -47,6 +46,7 @@ const AdicionarEstagiario = ({ adicionarEstagiario }) => {
 
                 <li className="lista-form col-md-6 col-sm-12">
                   <span>Área</span>
+                  <br/>
                   <input
                     type="text"
                     name="area"
