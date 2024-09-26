@@ -13,14 +13,14 @@ function Agenda() {
     views: [
       createViewWeek(),
       createViewMonthGrid(),
-      createViewDay(), // Adicione esta linha se você quiser que o dia esteja disponível
+      createViewDay(), 
     ],
     events: [
       {
         id: '1',
         title: 'Event 1',
-        start: '2023-12-16T00:00:00', // Data e hora de início
-        end: '2023-12-16T23:59:59', // Data e hora de término
+        start: '2023-12-16T00:00:00', 
+        end: '2023-12-16T23:59:59', 
       },
     ],
   });
@@ -74,8 +74,6 @@ function Agenda() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   
   
   
