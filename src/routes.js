@@ -5,7 +5,7 @@ import Estagiarios from './pages/Estagiarios.js';
 import Prontuario from './pages/Prontuarios.js';
 import Usuario from './pages/Usuario.js';
 import Agenda from './pages/Agenda.js';
-import Cadastrar from "./pages/cadastrar.js";
+import Cadastrar from './pages/cadastrar.js';
 
 
 
@@ -20,7 +20,8 @@ function RoutesApp() {
                 <Route path="/Usuario" element={<Usuario />} />
                 <Route path="/Agenda" element={<Agenda />} />
                 <Route path="/cadastrar" element={<Cadastrar />} />
-            
+
+
             </Routes>
         </BrowserRouter>
     );

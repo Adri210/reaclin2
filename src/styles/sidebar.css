@@ -111,6 +111,10 @@
   padding: 10px;
 }
 
+.sidebar .nav-link.active {
+  border-radius: 5px;
+  padding-left: 15px;
+  color: white !important;
 .sidebar {
   transition: width 0.3s ease;
 }

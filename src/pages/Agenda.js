@@ -1,13 +1,23 @@
-import { useCalendarApp, ScheduleXCalendar } from '@schedule-x/react';
-import {
-  createViewDay,
-  createViewMonthGrid,
-  createViewWeek,
-} from '@schedule-x/calendar';
-import '@schedule-x/theme-default/dist/index.css';
-import '../styles/Agenda.css';
-import Sidebar from '../componentes/sidebar.js';
+import React, { useState } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import Sidebar from '../componentes/sidebar.js'; // Importe seu componente de sidebar
 
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import '../styles/Agenda.css'; 
+
+const localizer = momentLocalizer(moment);
+
+const Agenda = () => {
+  const [events, setEvents] = useState([]);
+  const [currentEvent, setCurrentEvent] = useState(null);
+  const [formVisible, setFormVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    start: new Date(),
+    end: new Date(),
+    specialidade: '',
+    estagiario: '',
 function Agenda() {
   const calendar = useCalendarApp({
     views: [
@@ -25,59 +35,98 @@ function Agenda() {
     ],
   });
 
+  const handleSelectEvent = (event) => {
+    setFormData(event);
+    setCurrentEvent(event);
+    setFormVisible(true);
+  };
+
+  const handleSelectSlot = (slotInfo) => {
+    const start = slotInfo.start;
+    const end = moment(start).add(1, 'hour').toDate(); // Define a duração do evento como 1 hora
+    setFormData({ ...formData, start, end });
+    setCurrentEvent(null);
+    setFormVisible(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (currentEvent) {
+      // Atualizar evento
+      setEvents((prev) =>
+        prev.map((event) => (event.id === currentEvent.id ? { ...formData, id: currentEvent.id } : event))
+      );
+    } else {
+      // Adicionar evento
+      const newEvent = { ...formData, id: Math.random() }; // Gerar um ID único
+      setEvents((prev) => [...prev, newEvent]);
+    }
+    setFormVisible(false);
+    setFormData({ title: '', start: new Date(), end: new Date(), specialidade: '', estagiario: '' });
+  };
+
+  const handleDelete = () => {
+    if (currentEvent) {
+      setEvents((prev) => prev.filter((event) => event.id !== currentEvent.id));
+      setFormVisible(false);
+    }
+  };
+
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <Sidebar />
-        <div className="col cadastro">
-      {calendar && <ScheduleXCalendar calendarApp={calendar} />}
-    
-    </div>
-    </div>
-          <Header />
-          <div className="cadastro-dois d-flex flex-column p-2">
-            <div className="d-flex justify-content-between mb-3 ">
-              <div className="d-flex align-items-center gap-2">
-                <i className="fas fa-angle-left"></i>
-                <p className="m-0 text-nowrap">{mes}</p>
-                <i className="fas fa-angle-right"></i>
-              </div>
-              <div className="position-relative">
-              </div>
-              <span className="flag">Hoje</span>
-            </div>
-            <div className="calendar-container rounded-2 ">
-              <div className="title">Sun</div>
-              <div className="title">Mon</div>
-              <div className="title">Tue</div>
-              <div className="title">Wed</div>
-              <div className="title">Thu</div>
-              <div className="title">Fri</div>
-              <div className="title">Sat</div>
-
-              {dias.map(({ dia, eventos }) => (
-                <CalendarDay key={dia} day={dia} events={eventos} />
-              ))}
-
-              <div className="other-day">1</div>
-              <div className="other-day">2</div>
-              <div className="other-day">3</div>
-              <div className="other-day">4</div>
-              <div className="other-day">5</div>
-              <div className="other-day">6</div>
-              <div className="other-day">7</div>
-              <div className="other-day">8</div>
-              <div className="other-day">9</div>
-              <div className="other-day">10</div>
-              <div className="other-day">11</div>
-              
-            </div>
-          </div>
+    <div className="app-container">
+      <Sidebar /> {/* Adiciona a sidebar ao lado esquerdo */}
+      <div className="calendar-container">
+        <div className="calendar">
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: '80vh', margin: '50px' }} // Aumenta a altura do calendário
+            onSelectEvent={handleSelectEvent}
+            selectable
+            onSelectSlot={handleSelectSlot}
+            step={60} // Passo de 60 minutos
+            timeslots={1} // Número de slots por hora
+            defaultView="week" // Exibir a visão semanal por padrão
+          />
         </div>
+        {formVisible && (
+          <div className="event-form">
+            <h2>{currentEvent ? 'Editar Consulta' : 'Agendar Consulta'}</h2>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Título"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Especialidade"
+                value={formData.specialidade}
+                onChange={(e) => setFormData({ ...formData, specialidade: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Estagiário"
+                value={formData.estagiario}
+                onChange={(e) => setFormData({ ...formData, estagiario: e.target.value })}
+                required
+              />
+              <button type="submit">{currentEvent ? 'Atualizar' : 'Agendar'}</button>
+              {currentEvent && <button type="button" onClick={handleDelete}>Excluir</button>}
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
 
   
   
   );
-}
+};
 
 export default Agenda;
