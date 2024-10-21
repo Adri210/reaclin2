@@ -28,7 +28,7 @@ const Prontuario = () => {
 
   const adicionarProntuario = (novoProntuario) => {
     setProntuarios([...prontuarios, novoProntuario]);
-    setShowForm(false);  // essa const faz ele voltar a lista apos adicionar
+    setShowForm(false); 
   };
 
   return (

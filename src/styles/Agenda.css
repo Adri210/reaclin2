@@ -13,6 +13,12 @@
   display: flex; /* Usar flexbox para o layout do calendário e formulário */
   flex: 1; /* O calendário e o formulário ocupam o restante do espaço */
   margin-left: 20px; /* Espaçamento à esquerda para separar da sidebar */
+.cadastro {
+  background-color: #c9d6ff;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
 }
 
 /* Estilo do Calendário */
@@ -45,6 +51,9 @@
   border-radius: 4px; /* Bordas arredondadas */
   width: 100%;
   transition: border-color 0.2s; /* Transição suave */
+.main-calendar {
+  margin-left: 20px;
+  flex-grow: 1;
 }
 
 .event-form input:focus {
