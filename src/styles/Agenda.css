@@ -1,60 +1,68 @@
+/* Estilo do Contêiner Principal */
+/* Estilo do Contêiner Principal */
+.app-container {
+  display: flex; /* Usar flexbox para o layout */
+  height: 100vh; /* Altura total da tela */
+  margin: 0; /* Remover margens que possam criar espaço extra */
+  padding: 0; /* Remover preenchimentos que possam criar espaço extra */
+}
 
-.calendar-wrapper {
-.cadastro {
-  background-color: #c9d6ff;
+
+/* Estilo do Calendário */
+.calendar-container {
+  display: flex; /* Usar flexbox para o layout do calendário e formulário */
+  flex: 1; /* O calendário e o formulário ocupam o restante do espaço */
+  margin-left: 20px; /* Espaçamento à esquerda para separar da sidebar */
+}
+
+/* Estilo do Calendário */
+.calendar {
+  flex: 1; /* O calendário ocupa todo o espaço disponível */
+  margin-right: 20px; /* Espaçamento entre o calendário e o formulário */
+}
+
+/* Estilo do Formulário */
+.event-form {
+  width: 300px; /* Largura fixa para o formulário */
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #dee2e6; /* Borda cinza */
+  border-radius: 8px; /* Bordas arredondadas */
+  background-color: #ffffff; /* Fundo branco */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+
+.event-form h2 {
+  color: #343a40; /* Cor do título */
+}
+
+.event-form input {
+  display: block;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ced4da; /* Borda cinza clara */
+  border-radius: 4px; /* Bordas arredondadas */
   width: 100%;
-  height: 100vh;
-  display: flex;
-  position: relative;
+  transition: border-color 0.2s; /* Transição suave */
 }
 
-.hamburger-menu {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1000;
-  cursor: pointer;
+.event-form input:focus {
+  border-color: #007bff; /* Borda azul ao focar */
+  outline: none; /* Remover contorno padrão */
 }
 
-.sidebar {
-  width: 0;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  background-color: white;
-  z-index: 999;
-  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
+.event-form button {
+  background-color: #007bff; /* Azul */
+  color: white; /* Texto branco */
+  border: none; /* Sem borda */
+  border-radius: 4px; /* Bordas arredondadas */
+  padding: 10px;
+  cursor: pointer; /* Mão ao passar o mouse */
+  margin-right: 10px; /* Espaçamento entre botões */
+  transition: background-color 0.2s; /* Transição suave */
 }
 
-.sidebar.open {
-  width: 300px; /* Largura do calendário menor quando aberto */
-}
-
-.main-calendar {
-  margin-left: 20px;
-  flex-grow: 1;
-}
-
-button {
-  margin-bottom: 20px;
-  background-color: #42a5f5;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #1e88e5;
-}
-
-.sx-react-calendar-wrapper {
-  width: 1200px;
-  max-width: 100vw;
-  height: 800px;
-  max-height: 90vh;
+.event-form button:hover {
+  background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
 }
