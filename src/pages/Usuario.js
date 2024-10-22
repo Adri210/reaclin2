@@ -4,28 +4,35 @@ import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
 import '../styles/usuario.css'; 
 import perfil from '../imagens/perfil.png';
-import { AuthContext } from '../contexts/auth.js'; // Verifique a importação
+import { AuthContext } from '../contexts/auth.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Usuario = () => {
   const { user, updateUserProfile, fetchUsers, deleteUser } = useContext(AuthContext);
-  const [users, setUsers] = useState([]); // Estado para a lista de usuários
+  const [users, setUsers] = useState([]);
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [phone, setPhone] = useState('');
   const [role, setRole] = useState('');
-  const [editingUserId, setEditingUserId] = useState(null); // ID do usuário que está sendo editado
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [loading, setLoading] = useState(true); // Estado para controle de loading
 
   useEffect(() => {
     const loadUsers = async () => {
-      const userList = await fetchUsers(); // Função que busca usuários cadastrados
-      setUsers(userList);
+      try {
+        const userList = await fetchUsers();
+        setUsers(userList);
+      } catch (error) {
+        console.error("Erro ao carregar usuários:", error);
+      } finally {
+        setLoading(false); // Finaliza o loading
+      }
     };
 
     loadUsers();
-  }, []);
+  }, [fetchUsers]);
 
   useEffect(() => {
     if (user) {
@@ -35,6 +42,11 @@ const Usuario = () => {
   }, [user]);
 
   const handleSave = async () => {
+    if (!name || !email) {
+      alert('Por favor, preencha todos os campos obrigatórios.');
+      return;
+    }
+
     const profileData = {
       displayName: name,
       email,
@@ -42,29 +54,32 @@ const Usuario = () => {
       phone,
       role,
     };
-    
-    if (editingUserId) {
-      // Atualiza o usuário
-      await updateUserProfile(profileData, editingUserId);
-      alert('Perfil atualizado com sucesso!');
-    } else {
-      // Adiciona um novo usuário
-      await updateUserProfile(profileData);
-      alert('Usuário cadastrado com sucesso!');
+
+    try {
+      if (editingUserId) {
+        await updateUserProfile(profileData, editingUserId);
+        alert('Perfil atualizado com sucesso!');
+      } else {
+        await updateUserProfile(profileData);
+        alert('Usuário cadastrado com sucesso!');
+      }
+
+      // Limpa os campos após o salvamento
+      setEditingUserId(null);
+      setName('');
+      setSurname('');
+      setEmail('');
+      setBirthDate('');
+      setPhone('');
+      setRole('');
+
+      // Atualiza a lista de usuários
+      const userList = await fetchUsers();
+      setUsers(userList);
+    } catch (error) {
+      console.error("Erro ao salvar perfil:", error);
+      alert('Ocorreu um erro ao salvar. Tente novamente.');
     }
-
-    // Limpa os campos após o salvamento
-    setEditingUserId(null);
-    setName('');
-    setSurname('');
-    setEmail('');
-    setBirthDate('');
-    setPhone('');
-    setRole('');
-
-    // Atualiza a lista de usuários
-    const userList = await fetchUsers();
-    setUsers(userList);
   };
 
   const handleEdit = (user) => {
@@ -77,17 +92,21 @@ const Usuario = () => {
   };
 
   const handleDelete = async (id) => {
-    await deleteUser(id); // Função que exclui um usuário
-    alert('Usuário excluído com sucesso!');
-    
-    // Atualiza a lista de usuários após a exclusão
-    const userList = await fetchUsers();
-    setUsers(userList);
+    if (window.confirm('Tem certeza que deseja excluir este usuário?')) {
+      try {
+        await deleteUser(id);
+        alert('Usuário excluído com sucesso!');
+        const userList = await fetchUsers();
+        setUsers(userList);
+      } catch (error) {
+        console.error("Erro ao deletar usuário:", error);
+        alert('Ocorreu um erro ao excluir. Tente novamente.');
+      }
+    }
   };
 
-  // Se loading for true, pode ser útil renderizar um loading spinner ou mensagem
-  if (!user) {
-    return <p>Carregando perfil...</p>;
+  if (loading) {
+    return <p>Carregando usuários...</p>; // Mensagem de loading
   }
 
   return (
@@ -109,7 +128,7 @@ const Usuario = () => {
             <li className="lista-form col-md-6 col-sm-12">
               <span>Nome</span>
               <br />
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
             </li>
 
             <li className="lista-form col-md-6 col-sm-12">
@@ -120,7 +139,7 @@ const Usuario = () => {
             <li className="lista-form col-md-6 col-sm-12">
               <span>Email</span>
               <br />
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </li>
 
             <li className="lista-form col-md-6 col-sm-12">
@@ -145,13 +164,13 @@ const Usuario = () => {
 
           <h3>Lista de Funcionários</h3>
           <ul>
-            {users.map((user) => (
+            {users.length > 0 ? users.map((user) => (
               <li key={user.id}>
                 {user.displayName} - {user.email} 
                 <button onClick={() => handleEdit(user)}>Editar</button>
                 <button onClick={() => handleDelete(user.id)}>Excluir</button>
               </li>
-            ))}
+            )) : <p>Nenhum funcionário cadastrado.</p>}
           </ul>
         </div>
       </div>
