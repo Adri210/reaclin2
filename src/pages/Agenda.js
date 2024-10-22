@@ -18,6 +18,21 @@ const Agenda = () => {
     end: new Date(),
     specialidade: '',
     estagiario: '',
+function Agenda() {
+  const calendar = useCalendarApp({
+    views: [
+      createViewWeek(),
+      createViewMonthGrid(),
+      createViewDay(), 
+    ],
+    events: [
+      {
+        id: '1',
+        title: 'Event 1',
+        start: '2023-12-16T00:00:00', 
+        end: '2023-12-16T23:59:59', 
+      },
+    ],
   });
 
   const handleSelectEvent = (event) => {
@@ -108,6 +123,9 @@ const Agenda = () => {
         )}
       </div>
     </div>
+
+  
+  
   );
 };
 
