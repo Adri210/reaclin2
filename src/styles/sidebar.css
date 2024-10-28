@@ -115,6 +115,7 @@
   border-radius: 5px;
   padding-left: 15px;
   color: white !important;
+}
 .sidebar {
   transition: width 0.3s ease;
 }

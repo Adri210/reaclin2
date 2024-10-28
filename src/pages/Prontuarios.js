@@ -1,84 +1,118 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
-import '../styles/index.css';
-import '../styles/estagiario.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Adicionar from './adicionar.js';
+import AdicionarProntuario from './adicionarProntuario.js'; // Corrigido o nome do arquivo
+import '../styles/prontuario.css';
 
 const Prontuario = () => {
-  const [prontuarios, setProntuarios] = useState([
-    { nome: 'Maria', numero: '2545692', status: 'Ativo', data: '12 Jan. 2024' },
-    { nome: 'Ana', numero: '1362589', status: 'Cancelado', data: '14 Out. 2022' },
-    
-  ]);
-
+  const [prontuarios, setProntuarios] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [prontuarioParaEditar, setProntuarioParaEditar] = useState(null);
+
+  // Função para carregar os prontuários do banco de dados
+  const loadProntuarios = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/prontuarios');
+      if (!response.ok) {
+        throw new Error('Erro ao carregar prontuários');
+      }
+      const data = await response.json();
+      setProntuarios(data);
+    } catch (error) {
+      console.error('Erro ao carregar prontuários:', error);
+    }
+  };
 
   useEffect(() => {
-    const storedProntuarios = localStorage.getItem('prontuarios');
-    if (storedProntuarios) {
-      setProntuarios(JSON.parse(storedProntuarios));
-    }
+    loadProntuarios();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('prontuarios', JSON.stringify(prontuarios));
-  }, [prontuarios]);
+  const adicionarProntuario = async (prontuario, id = null) => {
+    try {
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `http://localhost:5000/prontuarios/${id}` : 'http://localhost:5000/prontuarios';
 
-  const adicionarProntuario = (novoProntuario) => {
-    setProntuarios([...prontuarios, novoProntuario]);
-    setShowForm(false); 
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(prontuario),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text(); // Mudança para capturar como texto
+        throw new Error(`Erro ao adicionar/atualizar prontuário: ${errorData}`);
+      }
+
+      await loadProntuarios();
+      setShowForm(false);
+      setProntuarioParaEditar(null);
+    } catch (error) {
+      alert(`Erro: ${error.message}`); // Alerta para mostrar erro
+      console.error('Erro ao adicionar/atualizar prontuário:', error);
+    }
+  };
+
+  const handleEdit = (prontuario) => {
+    setProntuarioParaEditar(prontuario);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/prontuarios/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errorData = await response.text(); // Mudança para capturar como texto
+        throw new Error(`Erro ao deletar prontuário: ${errorData}`);
+      }
+      await loadProntuarios();
+    } catch (error) {
+      alert(`Erro: ${error.message}`); // Alerta para mostrar erro
+      console.error('Erro ao deletar prontuário:', error);
+    }
   };
 
   return (
-    <div className="container-fluid">
-      <div className="row" >
-        <Sidebar />
-        <div className="col cadastro">
-          <Header />
-          {!showForm ? (
-            <>
-          <div class="d-flex align-items-center search-users ">
-          <h3 class="p-3 ">Prontuários</h3>
-          <div class="position-relative">
-            <input type="text" class="custom-input  border border-1 rounded-5 ps-2 pe-4"/>
-            <i class="fas fa-search position-absolute search-icon"></i>
-          </div>
-
-        </div>
-
-        <div className="container-fluid">
-            <table className="table table-hover tabela-grande " style={{ borderRadius: '10px', overflow: 'hidden' }}>
-                  <thead>
-                    <tr className="cor">
-                      <th scope="col">Nome</th>
-                      <th scope="col">Nº do Prontuário</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Data</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {prontuarios.map((prontuario, index) => (
-                      <tr key={index}>
-                        <td>{prontuario.nome}</td>
-                        <td>{prontuario.numero}</td>
-                        <td>{prontuario.status}</td>
-                        <td>{prontuario.data}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-            </table>
-          </div>
-              <button className="rounded-2" id="custom-btn" onClick={() => setShowForm(true)}>
-                Adicionar
-              </button>
-            </>
-          ) : (
-            <Adicionar adicionarProntuario={adicionarProntuario} />
-          )}
-        
-        </div>
+    <div className="prontuario-container">
+      <Sidebar />
+      <Header />
+      <div className="prontuario-content">
+        <h1>Prontuários</h1>
+        <button onClick={() => setShowForm(true)}>Adicionar Prontuário</button>
+        {showForm && (
+          <AdicionarProntuario
+            adicionarProntuario={adicionarProntuario}
+            prontuarioParaEditar={prontuarioParaEditar}
+            setProntuarioParaEditar={setProntuarioParaEditar}
+            handleCancel={() => setShowForm(false)}
+          />
+        )}
+        <table>
+          <thead>
+            <tr>
+              <th>Nome do Paciente</th>
+              <th>Número</th>
+              <th>Status</th>
+              <th>Data</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {prontuarios.map((prontuario) => (
+              <tr key={prontuario.id}>
+                <td>{prontuario.nomePaciente}</td>
+                <td>{prontuario.numero}</td>
+                <td>{prontuario.status}</td>
+                <td>{prontuario.data}</td>
+                <td>
+                  <button onClick={() => handleEdit(prontuario)}>Editar</button>
+                  <button onClick={() => handleDelete(prontuario.id)}>Deletar</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

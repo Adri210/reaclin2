@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import Sidebar from '../componentes/sidebar.js'; // Importe seu componente de sidebar
-
+import Sidebar from '../componentes/sidebar.js';
+import { db } from '../firebaseConection.js'; // Importe sua conexão com o Firebase
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import '../styles/Agenda.css'; 
+import '../styles/Agenda.css';
 
+// Configurar o localizador para o moment
 const localizer = momentLocalizer(moment);
 
 const Agenda = () => {
@@ -18,29 +20,31 @@ const Agenda = () => {
     end: new Date(),
     specialidade: '',
     estagiario: '',
-function Agenda() {
-  const calendar = useCalendarApp({
-    views: [
-      createViewWeek(),
-      createViewMonthGrid(),
-      createViewDay(), 
-    ],
-    events: [
-      {
-        id: '1',
-        title: 'Event 1',
-        start: '2023-12-16T00:00:00', 
-        end: '2023-12-16T23:59:59', 
-      },
-    ],
   });
 
+  // Carregar eventos do Firestore
+  useEffect(() => {
+    const loadEvents = async () => {
+      const eventsCollection = collection(db, 'events'); // Referência à coleção
+      const snapshot = await getDocs(eventsCollection); // Obtém documentos da coleção
+      const eventsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setEvents(eventsData);
+    };
+
+    loadEvents();
+  }, []);
+
+  // Selecionar evento
   const handleSelectEvent = (event) => {
     setFormData(event);
     setCurrentEvent(event);
     setFormVisible(true);
   };
 
+  // Selecionar slot no calendário
   const handleSelectSlot = (slotInfo) => {
     const start = slotInfo.start;
     const end = moment(start).add(1, 'hour').toDate(); // Define a duração do evento como 1 hora
@@ -49,32 +53,46 @@ function Agenda() {
     setFormVisible(true);
   };
 
-  const handleSubmit = (e) => {
+  // Manipular o envio do formulário
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (currentEvent) {
-      // Atualizar evento
-      setEvents((prev) =>
-        prev.map((event) => (event.id === currentEvent.id ? { ...formData, id: currentEvent.id } : event))
-      );
-    } else {
-      // Adicionar evento
-      const newEvent = { ...formData, id: Math.random() }; // Gerar um ID único
-      setEvents((prev) => [...prev, newEvent]);
+    try {
+      if (currentEvent) {
+        // Atualizar evento
+        const eventDoc = doc(db, 'events', currentEvent.id); // Referência ao documento
+        await updateDoc(eventDoc, formData); // Atualiza no Firestore
+        setEvents((prev) =>
+          prev.map((event) => (event.id === currentEvent.id ? { ...formData, id: currentEvent.id } : event))
+        );
+      } else {
+        // Adicionar evento
+        const newDocRef = await addDoc(collection(db, 'events'), { ...formData }); // Adiciona no Firestore
+        setEvents((prev) => [...prev, { ...formData, id: newDocRef.id }]); // Adiciona ID gerado pelo Firestore
+      }
+      setFormVisible(false);
+      setFormData({ title: '', start: new Date(), end: new Date(), specialidade: '', estagiario: '' });
+    } catch (error) {
+      console.error('Erro ao salvar evento:', error);
     }
-    setFormVisible(false);
-    setFormData({ title: '', start: new Date(), end: new Date(), specialidade: '', estagiario: '' });
   };
 
-  const handleDelete = () => {
+  // Manipular exclusão de eventos
+  const handleDelete = async () => {
     if (currentEvent) {
-      setEvents((prev) => prev.filter((event) => event.id !== currentEvent.id));
-      setFormVisible(false);
+      try {
+        const eventDoc = doc(db, 'events', currentEvent.id); // Referência ao documento
+        await deleteDoc(eventDoc); // Deleta do Firestore
+        setEvents((prev) => prev.filter((event) => event.id !== currentEvent.id));
+        setFormVisible(false);
+      } catch (error) {
+        console.error('Erro ao excluir evento:', error);
+      }
     }
   };
 
   return (
     <div className="app-container">
-      <Sidebar /> {/* Adiciona a sidebar ao lado esquerdo */}
+      <Sidebar />
       <div className="calendar-container">
         <div className="calendar">
           <Calendar
@@ -82,7 +100,7 @@ function Agenda() {
             events={events}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: '80vh', margin: '50px' }} // Aumenta a altura do calendário
+            style={{ height: '80vh', margin: '50px' }}
             onSelectEvent={handleSelectEvent}
             selectable
             onSelectSlot={handleSelectSlot}
@@ -123,9 +141,6 @@ function Agenda() {
         )}
       </div>
     </div>
-
-  
-  
   );
 };
 

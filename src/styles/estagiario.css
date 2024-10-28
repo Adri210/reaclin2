@@ -36,6 +36,58 @@
   padding-right: 95px;  
 }
 
+.app {
+  display: flex; /* Utiliza flexbox para organizar a sidebar e o conteúdo principal */
+}
+
+.main-content {
+  flex-grow: 1; /* O conteúdo principal ocupará o espaço restante */
+  padding: 20px; /* Adiciona um espaçamento interno ao conteúdo */
+  background-color: #f9f9f9; /* Cor de fundo para o conteúdo principal */
+  overflow-y: auto; /* Adiciona rolagem se o conteúdo for grande */
+}
+
+.container {
+  max-width: 1200px; /* Limita a largura máxima do conteúdo */
+  margin: auto; /* Centraliza o conteúdo */
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px; /* Espaço abaixo do título */
+}
+
+.btn-add {
+  background-color: #007bff; /* Cor de fundo do botão */
+  color: white; /* Cor do texto do botão */
+  padding: 10px 15px; /* Espaçamento interno do botão */
+  border: none; /* Remove bordas padrão */
+  border-radius: 5px; /* Bordas arredondadas */
+  cursor: pointer; /* Muda o cursor ao passar sobre o botão */
+  margin-bottom: 20px; /* Espaço abaixo do botão */
+}
+
+.estagiario-table {
+  width: 100%; /* Tabela ocupará toda a largura disponível */
+  border-collapse: collapse; /* Colapsa bordas para uma aparência melhor */
+}
+
+.estagiario-table th,
+.estagiario-table td {
+  border: 1px solid #ccc; /* Borda da tabela */
+  padding: 10px; /* Espaçamento interno das células */
+  text-align: left; /* Alinha o texto à esquerda */
+}
+
+.estagiario-table th {
+  background-color: #f2f2f2; /* Cor de fundo para o cabeçalho da tabela */
+}
+
+button {
+  margin-right: 10px; /* Espaço entre os botões */
+}
+
+
 @media(min-width: 1048px) {
   .cadastro {
     justify-content: center;

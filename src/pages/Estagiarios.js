@@ -1,81 +1,133 @@
+// src/Estagiario.js
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
-import '../styles/estagiario.css';
 import AdicionarEstagiario from './adicionar2.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/estagiario.css';
 
-
-const Estagiarios = () => {
-  const [estagiarios, setEstagiarios] = useState([
-    { nome: 'Jorge', area: 'Psicologia', turno: 'Tarde', horario: '10:00 ás 16:00' },
-    { nome: 'Eduardo', area: 'Fisioterapia', turno: 'Manhâ', horario: '8:00 ás 14:00' },
-  ]);
-
+const Estagiario = () => {
+  const [estagiarios, setEstagiarios] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [estagiarioParaEditar, setEstagiarioParaEditar] = useState(null);
+
+  // Função para carregar os estagiários do banco de dados
+  const loadEstagiarios = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/estagiarios');
+      if (!response.ok) {
+        throw new Error('Erro ao carregar estagiários');
+      }
+      const data = await response.json();
+      console.log(data); // Verificar os dados retornados
+      setEstagiarios(data);
+    } catch (error) {
+      console.error('Erro ao carregar estagiários:', error);
+    }
+  };
 
   useEffect(() => {
-    const storedEstagiarios = localStorage.getItem('estagiarios');
-    if (storedEstagiarios) {
-      setEstagiarios(JSON.parse(storedEstagiarios));
-    }
+    loadEstagiarios();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('estagiarios', JSON.stringify(estagiarios));
-  }, [estagiarios]);
+  const adicionarEstagiario = async (estagiario, id = null) => {
+    try {
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `http://localhost:5000/estagiarios/${id}` : 'http://localhost:5000/estagiarios';
 
-  const adicionarEstagiario = (novoEstagiario) => {
-    setEstagiarios([...estagiarios, novoEstagiario]);
-    setShowForm(false); 
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(estagiario),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Obter mensagem de erro da resposta
+        throw new Error(`Erro ao adicionar/atualizar estagiário: ${errorData.message}`);
+      }
+
+      await loadEstagiarios();
+      setShowForm(false);
+      setEstagiarioParaEditar(null);
+    } catch (error) {
+      console.error('Erro ao adicionar/atualizar estagiário:', error);
+    }
+  };
+
+  const handleEdit = (estagiario) => {
+    setEstagiarioParaEditar(estagiario);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/estagiarios/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Erro ao deletar estagiário');
+      }
+      loadEstagiarios();
+    } catch (error) {
+      console.error('Erro ao deletar estagiário:', error);
+    }
+  };
+
+  const handleAddEstagiario = () => {
+    setEstagiarioParaEditar(null);
+    setShowForm(true);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEstagiarioParaEditar(null);
   };
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <Sidebar />
-        <div className="col cadastro">
-          <Header />
-          {!showForm ? (
-            <>
-              <div className="d-flex align-items-center search-users ">
-                <h3 className="p-3 m-0  ">Estagiários</h3>
-                <div className="position-relative">
-                  <input type="text" className="custom-input border border-1 rounded-5 ps-2 pe-4" />
-                  <i className="fas fa-search position-absolute search-icon"></i>
-                </div>
-              </div>
-              <table className="table table-hover tabela " style={{ borderRadius: '10px', overflow: 'hidden' }}>
-                <thead>
-                  <tr className="cor">
-                    <th scope="col">Nome</th>
-                    <th scope="col">Área</th>
-                    <th scope="col">Turno Disponível</th>
-                    <th scope="col">Horário Disponível</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {estagiarios.map((estagiario, index) => (
-                    <tr key={index}>
-                      <td>{estagiario.nome}</td>
-                      <td>{estagiario.area}</td>
-                      <td>{estagiario.turno}</td>
-                      <td>{estagiario.horario}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <button className="rounded-2" id="custom-btn" onClick={() => setShowForm(true)}>
-                Adicionar
-              </button>
-            </>
-          ) : (
-            <AdicionarEstagiario adicionarEstagiario={adicionarEstagiario} />
+    <div className='app'>
+      <Sidebar />
+      <div className='main-content'>
+        <Header />
+        <div className='container'>
+          <h1>Lista de Estagiários</h1>
+          <button onClick={handleAddEstagiario} className="btn-add">Adicionar Estagiário</button>
+          {showForm && (
+            <AdicionarEstagiario
+              adicionarEstagiario={adicionarEstagiario}
+              estagiarioParaEditar={estagiarioParaEditar}
+              setEstagiarioParaEditar={setEstagiarioParaEditar}
+              handleCancel={handleCancel}
+            />
           )}
+          <table className='estagiario-table'>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Área</th>
+                <th>Turno</th>
+                <th>Horário</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(estagiarios) && estagiarios.map((estagiario) => (
+                <tr key={estagiario.id}>
+                  <td>{estagiario.nome}</td>
+                  <td>{estagiario.area}</td>
+                  <td>{estagiario.turno}</td>
+                  <td>{estagiario.horario}</td>
+                  <td>
+                    <button onClick={() => handleEdit(estagiario)}>Editar</button>
+                    <button onClick={() => handleDelete(estagiario.id)}>Excluir</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   );
 };
 
-export default Estagiarios;
+export default Estagiario;
+
