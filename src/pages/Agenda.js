@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
+import '../styles/index.css';
 import moment from 'moment';
 import Sidebar from '../componentes/sidebar.js';
 import { db } from '../firebaseConection.js'; // Importe sua conexão com o Firebase
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../styles/Agenda.css';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 // Configurar o localizador para o moment
 const localizer = momentLocalizer(moment);
@@ -36,6 +39,7 @@ const Agenda = () => {
 
     loadEvents();
   }, []);
+
 
   // Selecionar evento
   const handleSelectEvent = (event) => {

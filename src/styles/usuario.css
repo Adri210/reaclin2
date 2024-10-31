@@ -68,6 +68,8 @@ input {
 padding: 10px;
 }
 
+
+
 @media(max-width: 768px) {
   .cadastro {
     justify-content: flex-start;
