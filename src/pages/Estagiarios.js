@@ -1,8 +1,7 @@
-// src/Estagiario.js
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
-import AdicionarEstagiario from './adicionar2.js';
+import AdicionarEstagiario from './adicionar2.js'; // Corrigido o nome do arquivo
 import '../styles/estagiario.css';
 
 const Estagiario = () => {
@@ -18,7 +17,6 @@ const Estagiario = () => {
         throw new Error('Erro ao carregar estagiários');
       }
       const data = await response.json();
-      console.log(data); // Verificar os dados retornados
       setEstagiarios(data);
     } catch (error) {
       console.error('Erro ao carregar estagiários:', error);
@@ -33,72 +31,59 @@ const Estagiario = () => {
     try {
       const method = id ? 'PUT' : 'POST';
       const url = id ? `http://localhost:5000/estagiarios/${id}` : 'http://localhost:5000/estagiarios';
-
       const response = await fetch(url, {
-        method,
+        method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(estagiario),
       });
 
       if (!response.ok) {
-        const errorData = await response.json(); // Obter mensagem de erro da resposta
-        throw new Error(`Erro ao adicionar/atualizar estagiário: ${errorData.message}`);
+        throw new Error('Erro ao adicionar estagiário');
       }
-
       await loadEstagiarios();
       setShowForm(false);
       setEstagiarioParaEditar(null);
     } catch (error) {
-      console.error('Erro ao adicionar/atualizar estagiário:', error);
+      console.error('Erro ao adicionar estagiário:', error);
     }
   };
 
-  const handleEdit = (estagiario) => {
+  const editarEstagiario = (estagiario) => {
     setEstagiarioParaEditar(estagiario);
     setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
+  const excluirEstagiario = async (id) => {
     try {
       const response = await fetch(`http://localhost:5000/estagiarios/${id}`, {
         method: 'DELETE',
       });
+
       if (!response.ok) {
         throw new Error('Erro ao deletar estagiário');
       }
-      loadEstagiarios();
+      await loadEstagiarios();
     } catch (error) {
-      console.error('Erro ao deletar estagiário:', error);
+      console.error('Erro ao excluir estagiário:', error);
     }
   };
 
-  const handleAddEstagiario = () => {
-    setEstagiarioParaEditar(null);
-    setShowForm(true);
-  };
-
-  const handleCancel = () => {
-    setShowForm(false);
-    setEstagiarioParaEditar(null);
-  };
-
   return (
-    <div className='app'>
+    <div className="container">
       <Sidebar />
-      <div className='main-content'>
+      <div className="main-content">
         <Header />
-        <div className='container'>
-          <h1>Lista de Estagiários</h1>
-          <button onClick={handleAddEstagiario} className="btn-add">Adicionar Estagiário</button>
+        <div className="estagiario-content">
+          <h1>Estagiários</h1>
+          <button onClick={() => setShowForm(true)}>Adicionar Estagiário</button>
           {showForm && (
             <AdicionarEstagiario
+              estagiario={estagiarioParaEditar}
               adicionarEstagiario={adicionarEstagiario}
-              estagiarioParaEditar={estagiarioParaEditar}
-              setEstagiarioParaEditar={setEstagiarioParaEditar}
-              handleCancel={handleCancel}
+              setShowForm={setShowForm}
             />
           )}
-          <table className='estagiario-table'>
+          <table>
             <thead>
               <tr>
                 <th>Nome</th>
@@ -109,15 +94,15 @@ const Estagiario = () => {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(estagiarios) && estagiarios.map((estagiario) => (
+              {estagiarios.map((estagiario) => (
                 <tr key={estagiario.id}>
                   <td>{estagiario.nome}</td>
                   <td>{estagiario.area}</td>
                   <td>{estagiario.turno}</td>
                   <td>{estagiario.horario}</td>
                   <td>
-                    <button onClick={() => handleEdit(estagiario)}>Editar</button>
-                    <button onClick={() => handleDelete(estagiario.id)}>Excluir</button>
+                    <button onClick={() => editarEstagiario(estagiario)}>Editar</button>
+                    <button onClick={() => excluirEstagiario(estagiario.id)}>Excluir</button>
                   </td>
                 </tr>
               ))}
@@ -130,4 +115,3 @@ const Estagiario = () => {
 };
 
 export default Estagiario;
-

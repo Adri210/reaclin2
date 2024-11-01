@@ -87,6 +87,34 @@ button {
   margin-right: 10px; /* Espaço entre os botões */
 }
 
+.container {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+button {
+  margin: 5px;
+}
+
+
 
 @media(min-width: 1048px) {
   .cadastro {

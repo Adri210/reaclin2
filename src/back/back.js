@@ -11,7 +11,7 @@ import {
   doc,
   deleteDoc
 } from 'firebase/firestore'; // Importar funções do Firestore
-import path from 'path';
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,7 +24,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60, // 1 hora
+      maxAge: 1000 * 30 , 
       httpOnly: true, // Protege contra ataques XSS
       secure: process.env.NODE_ENV === 'production', // Configura para HTTPS em produção
     },
@@ -38,25 +38,17 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Middleware para verificar se o usuário está autenticado
-function verificaAutenticacao(req, res, next) {
-  if (req.session.userId) {
-    next(); // Usuário autenticado, prossiga com a rota
-  } else {
-    res.status(401).json({ message: 'Usuário não autenticado' });
-  }
-}
 
-// Rota de login que inicia a sessão
 app.post('/login', (req, res) => {
-  const { userId } = req.body; // Obtenha o ID do usuário enviado no corpo da requisição
-  if (userId) {
-    req.session.userId = userId; // Salva o ID do usuário na sessão
-    res.json({ message: 'Login bem-sucedido' });
+  const { userId, password } = req.body; // Use o email e a senha
+  if (userId && password) {
+      req.session.userId = userId; // Salva o ID do usuário na sessão
+      res.json({ message: 'Login bem-sucedido' });
   } else {
-    res.status(400).json({ message: 'ID de usuário não fornecido' });
+      res.status(400).json({ message: 'ID de usuário ou senha não fornecidos' });
   }
 });
+
 
 // Rota de logout para encerrar a sessão
 app.post('/logout', (req, res) => {
@@ -68,7 +60,7 @@ app.post('/logout', (req, res) => {
 });
 
 // Rota para listar prontuários (autenticada)
-app.get('/prontuarios', verificaAutenticacao, async (req, res) => {
+app.get('/prontuarios',  async (req, res) => {
   try {
     const prontuariosCol = collection(db, 'prontuarios');
     const prontuariosSnapshot = await getDocs(prontuariosCol);
@@ -80,13 +72,64 @@ app.get('/prontuarios', verificaAutenticacao, async (req, res) => {
   }
 });
 
-// Rota para servir o arquivo de estagiários
-app.get('/estagiarios', verificaAutenticacao, (req, res) => {
-  res.sendFile(path.join(__dirname, 'Estagiarios.js'));
+// Rota para listar estagiários
+app.get('/estagiarios', async (req, res) => {
+  try {
+    const estagiariosCol = collection(db, 'estagiarios');
+    const estagiariosSnapshot = await getDocs(estagiariosCol);
+    const estagiariosList = estagiariosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    console.log(estagiariosList); // Verificar os dados retornados
+    res.json(estagiariosList);
+  } catch (error) {
+    console.error('Erro ao listar estagiários:', error);
+    res.status(500).json({ message: 'Erro ao listar estagiários' });
+  }
+});
+
+// Rota para adicionar estagiário
+app.post('/estagiarios', async (req, res) => {
+  try {
+    const { nome, area, turno, horario } = req.body;
+    if (!nome || !area || !turno || !horario) {
+      return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
+    }
+    const newEstagiario = { nome, area, turno, horario };
+    const docRef = await addDoc(collection(db, 'estagiarios'), newEstagiario);
+    res.status(201).json({ id: docRef.id, ...newEstagiario });
+  } catch (error) {
+    console.error('Erro ao criar estagiário:', error);
+    res.status(500).json({ message: 'Erro ao criar estagiário' });
+  }
+});
+
+// Rota para atualizar estagiário
+app.put('/estagiarios/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nome, area, turno, horario } = req.body;
+    await updateDoc(doc(db, 'estagiarios', id), { nome, area, turno, horario });
+    res.sendStatus(204);
+  } catch (error) {
+    console.error('Erro ao atualizar estagiário:', error);
+    res.status(500).json({ message: 'Erro ao atualizar estagiário' });
+  }
+});
+
+// Rota para deletar estagiário
+app.delete('/estagiarios/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await deleteDoc(doc(db, 'estagiarios', id));
+    res.sendStatus(204); // No Content
+  } catch (error) {
+    console.error('Erro ao deletar estagiário:', error);
+    res.status(500).json({ message: 'Erro ao deletar estagiário' });
+  }
 });
 
 // Rota para adicionar prontuário
-app.post('/prontuarios', verificaAutenticacao, async (req, res) => {
+app.post('/prontuarios',  async (req, res) => {
+  console.log('Dados recebidos para adicionar prontuário:', req.body);
   try {
     const { nomePaciente, numero, status, data } = req.body;
 
@@ -102,8 +145,9 @@ app.post('/prontuarios', verificaAutenticacao, async (req, res) => {
   }
 });
 
+
 // Rota para atualizar prontuário
-app.put('/prontuarios/:id', verificaAutenticacao, async (req, res) => {
+app.put('/prontuarios/:id', async (req, res) => {
   const { id } = req.params;
   const { nomePaciente, numero, status, data } = req.body;
 
@@ -118,7 +162,7 @@ app.put('/prontuarios/:id', verificaAutenticacao, async (req, res) => {
 });
 
 // Rota para deletar prontuário
-app.delete('/prontuarios/:id', verificaAutenticacao, async (req, res) => {
+app.delete('/prontuarios/:id', async (req, res) => {
   const { id } = req.params;
 
   try {

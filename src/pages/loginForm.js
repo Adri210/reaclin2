@@ -30,6 +30,15 @@ const LoginForm = () => {
             });
         };
         verificarLogin();
+
+        // Verificar se a sessão foi encerrada a cada 1 segundo
+        const sessionCheckInterval = setInterval(() => {
+            if (!Cookies.get('authToken')) {
+                handleLogout();
+            }
+        }, 1000);
+
+        return () => clearInterval(sessionCheckInterval); // Limpa o intervalo ao desmontar
     }, []);
 
     const handleLogout = async () => {
@@ -44,23 +53,24 @@ const LoginForm = () => {
             alert("Usuário logado com sucesso");
             setEmail("");
             setSenha("");
-
+    
             // Obter e armazenar o token no cookie
             const token = await value.user.getIdToken();
             const response = await fetch("http://localhost:5000/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                     Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ token }),
+                body: JSON.stringify({ userId: email, password: senha }), // Use email e senha para login
                 credentials: 'include',
             });
-
+    
             if (response.ok) {
                 navigate('/usuario'); // Navegar após login bem-sucedido
             } else {
-                throw new Error("Erro ao criar sessão.");
+                const errorData = await response.json(); // Obtenha detalhes do erro
+                throw new Error(errorData.message || "Erro ao criar sessão.");
             }
         } catch (error) {
             alert(error.message || "Erro ao fazer login!");

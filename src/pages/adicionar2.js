@@ -1,44 +1,33 @@
-// src/adicionar2.js
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const AdicionarEstagiario = ({ adicionarEstagiario, estagiarioParaEditar, setEstagiarioParaEditar, handleCancel }) => {
+const AdicionarEstagiario = ({ estagiario, adicionarEstagiario, setShowForm }) => {
   const [nome, setNome] = useState('');
   const [area, setArea] = useState('');
   const [turno, setTurno] = useState('');
   const [horario, setHorario] = useState('');
 
   useEffect(() => {
-    if (estagiarioParaEditar) {
-      setNome(estagiarioParaEditar.nome);
-      setArea(estagiarioParaEditar.area);
-      setTurno(estagiarioParaEditar.turno);
-      setHorario(estagiarioParaEditar.horario);
+    if (estagiario) {
+      setNome(estagiario.nome);
+      setArea(estagiario.area);
+      setTurno(estagiario.turno);
+      setHorario(estagiario.horario);
     } else {
-      resetForm();
+      setNome('');
+      setArea('');
+      setTurno('');
+      setHorario('');
     }
-  }, [estagiarioParaEditar]);
+  }, [estagiario]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const novoEstagiario = { nome, area, turno, horario };
-    if (estagiarioParaEditar) {
-      adicionarEstagiario(novoEstagiario, estagiarioParaEditar.id);
-    } else {
-      adicionarEstagiario(novoEstagiario);
-    }
-    resetForm();
-  };
-
-  const resetForm = () => {
-    setNome('');
-    setArea('');
-    setTurno('');
-    setHorario('');
-    setEstagiarioParaEditar(null);
+    const estagiarioData = { nome, area, turno, horario };
+    adicionarEstagiario(estagiarioData, estagiario ? estagiario.id : null);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form-estagiario">
+    <form onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Nome"
@@ -67,8 +56,8 @@ const AdicionarEstagiario = ({ adicionarEstagiario, estagiarioParaEditar, setEst
         onChange={(e) => setHorario(e.target.value)}
         required
       />
-      <button type="submit" className="btn-submit">Salvar</button>
-      <button type="button" onClick={handleCancel} className="btn-cancel">Cancelar</button>
+      <button type="submit">{estagiario ? 'Atualizar' : 'Adicionar'} Estagiário</button>
+      <button type="button" onClick={() => setShowForm(false)}>Cancelar</button>
     </form>
   );
 };
