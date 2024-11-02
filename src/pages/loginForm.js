@@ -21,7 +21,7 @@ const LoginForm = () => {
                     user.getIdToken().then((token) => {
                         Cookies.set('authToken', token, { expires: 1 });
                         // Configura a expiração da sessão
-                        setTimeout(handleLogout, 300000); // 30 segundos
+                        setTimeout(handleLogout, 3600000); // 30 segundos
                     });
                 } else {
                     setUsuario(false);
@@ -96,7 +96,7 @@ const LoginForm = () => {
                     value={senha}
                     onChange={(e) => setSenha(e.target.value)}
                 />
-                <button onClick={logarUsuario}>Entrar</button>
+                <button onClick={logarUsuario} className="buttonLogin">Entrar</button>
                 <div>
                     Não tem uma conta?
                     <Link to="/cadastrar">Cadastrar</Link>

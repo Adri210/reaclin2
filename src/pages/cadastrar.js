@@ -60,7 +60,7 @@ function Cadastrar() {
             onChange={(e) => setSenha(e.target.value)}
           />
 
-          <button onClick={novoUsuario}>Cadastrar</button>
+          <button onClick={novoUsuario} className='buttonLogin'>Cadastrar</button>
           <p></p>
           <div className="paragrafo">
             Ja tem uma conta?

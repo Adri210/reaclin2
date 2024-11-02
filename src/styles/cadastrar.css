@@ -35,24 +35,7 @@
     padding-left: 5px;
   }
   
-  .container button{
-    background-color: #008FD1;
-    color: #fff;
-    font-size: 12px;
-    padding: 8px 100px;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  
-  .container button.hidden{
-    background-color: transparent;
-    border-color: #fff;
-  }
+ 
   
   .container input{
     background-color: #eee;

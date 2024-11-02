@@ -25,11 +25,11 @@ function RoutesApp() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<LoginForm />} />
-                <Route path="/estagiario" element={<Estagiarios />} />
+                <Route path="/estagiario" element={<RequireAuth><Estagiarios /></RequireAuth>}/>
                 <Route path="/prontuario" element={<RequireAuth><Prontuario /></RequireAuth>} />
                 <Route path="/usuario" element={<RequireAuth><Usuario /></RequireAuth>} />
                 <Route path="/agenda" element={<RequireAuth><Agenda /></RequireAuth>} />
-                <Route path="/cadastrar" element={<RequireAuth><Cadastrar /></RequireAuth>} />
+                <Route path="/cadastrar" element={<Cadastrar />} />
             </Routes>
         </BrowserRouter>
     );

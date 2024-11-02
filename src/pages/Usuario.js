@@ -112,69 +112,97 @@ const Usuario = () => {
   return (
     <div className="row">
       <Sidebar />
-      <div className="col cadastro">
         <Header />
-        <div className="cadastro-dois">
-          <div>
-            <h3 id="titulo-dois">Gerenciar Funcionários</h3>
-            <div className="img-perfil">
-              <img src={perfil} alt="Foto de Perfil" />
-              <br />
-              <p className="m-0">Foto de Perfil</p>
-            </div>
+        
+        <div className='container'>
+
+          <h3 className="titulo">Gerenciar Funcionários</h3>
+          <div className="img-perfil">
+            <img src={perfil} alt="Foto de Perfil" />
+            <p className="m-0">Foto de Perfil</p>
           </div>
 
           <div className="row">
-            <li className="lista-form col-md-6 col-sm-12">
+            <li className="input-container col-md-6 col-sm-12">
               <span>Nome</span>
-              <br />
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+              <input 
+                type="text" 
+                className="input-text" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                required 
+              />
             </li>
 
-            <li className="lista-form col-md-6 col-sm-12">
+            <li className="input-container col-md-6 col-sm-12">
               <span>Sobrenome</span>
-              <input type="text" value={surname} onChange={(e) => setSurname(e.target.value)} />
+              <input 
+                type="text" 
+                className="input-text" 
+                value={surname} 
+                onChange={(e) => setSurname(e.target.value)} 
+              />
             </li>
 
-            <li className="lista-form col-md-6 col-sm-12">
+            <li className="input-container col-md-6 col-sm-12">
               <span>Email</span>
-              <br />
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <input 
+                type="email" 
+                className="input-text" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+              />
             </li>
 
-            <li className="lista-form col-md-6 col-sm-12">
+            <li className="input-container col-md-6 col-sm-12">
               <span>Data de nascimento</span>
-              <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+              <input 
+                type="date" 
+                className="input-text" 
+                value={birthDate} 
+                onChange={(e) => setBirthDate(e.target.value)} 
+              />
             </li>
 
-            <li className="lista-form col-md-6 col-sm-12">
+            <li className="input-container col-md-6 col-sm-12">
               <span>Celular</span>
-              <br />
-              <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
+              <input 
+                type="text" 
+                className="input-text" 
+                value={phone} 
+                onChange={(e) => setPhone(e.target.value)} 
+              />
             </li>
 
-            <li className="lista-form col-md-6 col-sm-12">
+            <li className="input-container col-md-6 col-sm-12">
               <span>Função</span>
-              <br />
-              <input type="text" value={role} onChange={(e) => setRole(e.target.value)} />
+              <input 
+                type="text" 
+                className="input-text" 
+                value={role} 
+                onChange={(e) => setRole(e.target.value)} 
+              />
             </li>
           </div>
 
-          <button id="botao-salvar" onClick={handleSave}>Salvar</button>
+          <button className="botao-salvar" onClick={handleSave}>Salvar</button>
 
           <h3>Lista de Funcionários</h3>
-          <ul>
+          <ul className="lista-funcionarios">
             {users.length > 0 ? users.map((user) => (
               <li key={user.id}>
-                {user.displayName} - {user.email} 
-                <button onClick={() => handleEdit(user)}>Editar</button>
-                <button onClick={() => handleDelete(user.id)}>Excluir</button>
+                {user.displayName || "Nome não disponível"} - {user.email} 
+                <div className='buttons'>
+                  <button onClick={() => handleEdit(user)} className='buttonEdit'>Editar</button>
+                  <button onClick={() => handleDelete(user.id)} className='buttonEdit'>Excluir</button>
+                </div>
               </li>
             )) : <p>Nenhum funcionário cadastrado.</p>}
           </ul>
         </div>
       </div>
-    </div>
+  
   );
 };
 

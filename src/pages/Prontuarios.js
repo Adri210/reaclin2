@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
+import '../styles/index.css'; 
 import AdicionarProntuario from './adicionarProntuario.js'; // Corrigido o nome do arquivo
 import '../styles/prontuario.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Prontuario = () => {
   const [prontuarios, setProntuarios] = useState([]);
@@ -71,11 +73,12 @@ const Prontuario = () => {
   };
 
   return (
-    <div className="container">
+    <div>
       <Sidebar />
-      <div className="main-content">
+      <div>
         <Header />
-        <div className="prontuario-content">
+        <div>
+          <div>
           <h1>Prontuários</h1>
           <button onClick={() => setShowForm(true)}>Adicionar Prontuário</button>
           {showForm && (
@@ -110,6 +113,7 @@ const Prontuario = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
 import AdicionarEstagiario from './adicionar2.js'; // Corrigido o nome do arquivo
 import '../styles/estagiario.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Estagiario = () => {
   const [estagiarios, setEstagiarios] = useState([]);

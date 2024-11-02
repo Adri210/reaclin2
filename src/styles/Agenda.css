@@ -131,17 +131,7 @@
   transition: background 0.3s;
 }
 
-.event-form button:hover {
-  background-color: #0056b3; /* Cor de fundo ao passar o mouse */
-}
 
-.event-form button[type="button"] {
-  background-color: #dc3545; /* Cor de fundo para o botão de excluir */
-}
-
-.event-form button[type="button"]:hover {
-  background-color: #c82333; /* Cor de fundo ao passar o mouse no botão de excluir */
-}
 
 /* Adicionando estilos para o calendário */
 .rbc-calendar {
