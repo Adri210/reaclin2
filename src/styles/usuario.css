@@ -1,19 +1,11 @@
-/* index.css */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
-}
 
-/* Layout */
-.row {
-  display: flex;
-  flex-wrap: wrap;
-}
+
 
 .container {
   background-color: #f4f4f4;
+  position: relative;
+  
+
 }
 
 .cadastro {
@@ -22,12 +14,14 @@ body {
   background-color: #fff; /* Mudando para branco para destacar o conteúdo */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative; /* Alterado de fixed para relative */
 }
+
 
 /* Títulos */
 .titulo {
   font-size: 30px;
-  margin-bottom: 20px;
+  margin-bottom: px;
   margin-top: 20px;
   color: #0017e8;
 }

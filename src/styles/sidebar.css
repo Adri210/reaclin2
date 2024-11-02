@@ -173,7 +173,7 @@
   right: -14px;
   top: 3.5%;
   padding-top: 50px;
-  background-color: #fff;
+  background-color: #0d6efd;
   width:28px;
   height: 28px;
   border-radius: 8px;
@@ -182,7 +182,7 @@
   justify-content: center;
   cursor: pointer;
   color: #f6f6f6;
-  border: 2px solid #f6f6f6;
+  border: 2px solid;
 }
 
 .menu-btn:hover i{
@@ -191,6 +191,7 @@ color: #000;
 
 .menu-btn i{
   transition: all 0.3s;
+  
   }
 
 

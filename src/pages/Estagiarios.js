@@ -31,7 +31,10 @@ const Estagiario = () => {
   const adicionarEstagiario = async (estagiario, id = null) => {
     try {
       const method = id ? 'PUT' : 'POST';
-      const url = id ? `http://localhost:5000/estagiarios/${id}` : 'http://localhost:5000/estagiarios';
+      const url = id 
+        ? `http://localhost:5000/estagiarios/${id}` 
+        : 'http://localhost:5000/estagiarios';
+
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
@@ -70,13 +73,13 @@ const Estagiario = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container-estagiarios">
       <Sidebar />
       <div className="main-content">
         <Header />
         <div className="estagiario-content">
-          <h1>Estagiários</h1>
-          <button onClick={() => setShowForm(true)}>Adicionar Estagiário</button>
+          <div className='titulo'><h1>Estagiários</h1></div>
+          <button className='botao-adicionar' onClick={() => setShowForm(true)}>Adicionar Estagiário</button>
           {showForm && (
             <AdicionarEstagiario
               estagiario={estagiarioParaEditar}
@@ -84,6 +87,7 @@ const Estagiario = () => {
               setShowForm={setShowForm}
             />
           )}
+          <div className='lista-e'><h3>Lista de Estagiários</h3></div>
           <table>
             <thead>
               <tr>
@@ -102,8 +106,8 @@ const Estagiario = () => {
                   <td>{estagiario.turno}</td>
                   <td>{estagiario.horario}</td>
                   <td>
-                    <button onClick={() => editarEstagiario(estagiario)}>Editar</button>
-                    <button onClick={() => excluirEstagiario(estagiario.id)}>Excluir</button>
+                    <button className='botao-editar' onClick={() => editarEstagiario(estagiario)}>Editar</button>
+                    <button className='botao-editar' onClick={() => excluirEstagiario(estagiario.id)}>Excluir</button>
                   </td>
                 </tr>
               ))}

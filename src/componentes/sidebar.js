@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/sidebar.css'; 
+import '../styles/sidebar.css';
 import vetor from '../imagens/Vector.png';
 import person from '../imagens/person-fill.png';
 import calendar from '../imagens/calendar-event-fill.png';
@@ -8,6 +8,7 @@ import users from '../imagens/users-solid.svg';
 import personCircle from '../imagens/perfil.png';
 import logo from '../imagens/logo.png';
 import { NavLink } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Sidebar = () => {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -69,7 +70,7 @@ const Sidebar = () => {
             aria-expanded="false"
           >
             <img src={personCircle} alt="Perfil" width="30" height="30" className="rounded-circle" />
-            <span className={`d-none d-sm-inline mx-1 ${isMinimized ? 'd-none' : ''}`}>João</span>
+            <span className={`d-none d-sm-inline mx-1 ${isMinimized ? 'd-none' : ''}`}>Usuario</span>
           </a>
           <ul className="dropdown-menu text-small shadow">
             <li><a className="dropdown-item" href="#">Configurações</a></li>

@@ -1,4 +1,122 @@
+.container-estagiarios {
+  background-color: #fff;
+  border-radius: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+  width: 1080px;
+  max-width: 100%;
+  margin-left: 200px;
+  padding: 20px; /* Adicione um padding para dar espaço interno */
+}
 
+.titulo {
+  font-size: 30px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
+  color: #0017e8;
+}
+
+.botao-adicionar {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 18px;
+  margin-left: 20px; /* Ajuste o valor para afastar o botão do lado esquerdo */
+  transition: background-color 0.3s; /* Transição suave */
+}
+
+
+.botao-adicionar:hover {
+  background-color: #0056b3;
+}
+
+.botao-editar {
+  padding: 5px 10px; /* Ajustando o padding para menor */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px; /* Tamanho da fonte */
+  margin-right: 5px; 
+  background-color: #007bff; /* Cor de fundo */
+  color: white; /* Cor do texto */
+  transition: background-color 0.3s; /* Transição suave */
+}
+
+.botao-editar:hover {
+  background-color: #0056b3;
+}
+
+.lista-e{
+  padding-left: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+thead tr {
+  background: #f1f1f1;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+tbody tr {
+  background: #f9f9f9;
+  margin: 10px 0;
+  border-radius: 4px;
+  box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+tbody tr:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+button.botao-editar {
+  padding: 5px 10px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.botao-editar:hover {
+  background-color: #0056b3;
+}
+
+.input-container {
+  margin-bottom: 15px;
+}
+
+.input-container span {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-text {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.input-text:focus {
+  border-color: #007bff;
+  outline: none;
+}
 
 @media(min-width: 1048px) {
   .cadastro {
@@ -60,5 +178,3 @@
     font-size: 12px;
   }
 }
-
-

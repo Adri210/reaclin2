@@ -28,35 +28,36 @@ const AdicionarProntuario = ({ prontuario, adicionarProntuario, setShowForm }) =
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
+      <input className='input-containerE input-textE'
         type="text"
         placeholder="Nome do Paciente"
         value={nomePaciente}
         onChange={(e) => setNomePaciente(e.target.value)}
         required
       />
-      <input
+      <input className='input-containerE input-textE'
         type="text"
         placeholder="Número"
         value={numero}
         onChange={(e) => setNumero(e.target.value)}
         required
       />
-      <input
+      <input className='input-containerE input-textE'
         type="text"
         placeholder="Status"
         value={status}
         onChange={(e) => setStatus(e.target.value)}
         required
       />
-      <input
+      <input className='input-containerE input-textE'
         type="date"
         value={data}
         onChange={(e) => setData(e.target.value)}
         required
       />
-      <button type="submit">{prontuario ? 'Atualizar' : 'Adicionar'} Prontuário</button>
-      <button type="button" onClick={() => setShowForm(false)}>Cancelar</button>
+      <br></br>
+      <button className='botao-editarE' type="submit">{prontuario ? 'Atualizar' : 'Adicionar'} Prontuário</button>
+      <button className='botao-editarE' type="button" onClick={() => setShowForm(false)}>Cancelar</button>
     </form>
   );
 };

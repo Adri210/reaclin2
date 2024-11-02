@@ -1,0 +1,43 @@
+.input-containerE {
+  margin-bottom: 15px;
+  margin-left: 20px; /* Afastar das laterais */
+  margin-right: 20px; /* Afastar das laterais */
+}
+
+.input-containerE span {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-textE {
+  width: 90%; /* Reduzir a largura dos inputs */
+  max-width: 400px; /* Definir um limite máximo de largura, se necessário */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.input-textE:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.botao-editarE {
+  padding: 8px 14px; /* Ajustando o padding para menor */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px; /* Tamanho da fonte */
+  margin-right: 5px; 
+  background-color: #007bff; /* Cor de fundo */
+  color: white; /* Cor do texto */
+  transition: background-color 0.3s; /* Transição suave */
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.botao-editarE:hover {
+  background-color: #0056b3;
+}

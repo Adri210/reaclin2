@@ -7,11 +7,49 @@ import { db } from '../firebaseConection.js'; // Importe sua conexão com o Fire
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../styles/Agenda.css';
-import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 
 // Configurar o localizador para o moment
+moment.locale('pt-br');
 const localizer = momentLocalizer(moment);
+
+// Mensagens traduzidas para português
+const messages = {
+  allDay: 'Dia Inteiro',
+  previous: '<',
+  next: '>',
+  today: 'Hoje',
+  month: 'Mês',
+  week: 'Semana',
+  day: 'Dia',
+  agenda: 'Agenda',
+  date: 'Data',
+  time: 'Hora',
+  event: 'Evento',
+  noEventsInRange: 'Não há eventos neste período.',
+  showMore: (total) => `+ Ver mais (${total})`,
+  // Adicione as traduções dos dias da semana
+  sunday: 'Domingo',
+  monday: 'Segunda-feira',
+  tuesday: 'Terça-feira',
+  wednesday: 'Quarta-feira',
+  thursday: 'Quinta-feira',
+  friday: 'Sexta-feira',
+  saturday: 'Sábado',
+  // Adicione as traduções dos meses
+  january: 'Janeiro',
+  february: 'Fevereiro',
+  march: 'Março',
+  april: 'Abril',
+  may: 'Maio',
+  june: 'Junho',
+  july: 'Julho',
+  august: 'Agosto',
+  september: 'Setembro',
+  october: 'Outubro',
+  november: 'Novembro',
+  december: 'Dezembro',
+};
+
 
 const Agenda = () => {
   const [events, setEvents] = useState([]);
@@ -39,7 +77,6 @@ const Agenda = () => {
 
     loadEvents();
   }, []);
-
 
   // Selecionar evento
   const handleSelectEvent = (event) => {
@@ -111,6 +148,7 @@ const Agenda = () => {
             step={60} // Passo de 60 minutos
             timeslots={1} // Número de slots por hora
             defaultView="week" // Exibir a visão semanal por padrão
+            messages={messages} // Adiciona as mensagens traduzidas
           />
         </div>
         {formVisible && (

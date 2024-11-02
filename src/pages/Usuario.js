@@ -2,10 +2,14 @@ import React, { useContext, useState, useEffect } from 'react';
 import '../styles/index.css';
 import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
-import '../styles/usuario.css'; 
+import '../styles/usuario.css';
 import perfil from '../imagens/perfil.png';
 import { AuthContext } from '../contexts/auth.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { doc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../firebaseConection.js';
+import { FiUpload } from 'react-icons/fi';
 
 const Usuario = () => {
   const { user, updateUserProfile, fetchUsers, deleteUser } = useContext(AuthContext);
@@ -17,7 +21,9 @@ const Usuario = () => {
   const [phone, setPhone] = useState('');
   const [role, setRole] = useState('');
   const [editingUserId, setEditingUserId] = useState(null);
-  const [loading, setLoading] = useState(true); // Estado para controle de loading
+  const [loading, setLoading] = useState(true);
+  const [avatarUrl, setAvatarUrl] = useState(user && user.avatarUrl);
+  const [imageAvatar, setImageAvatar] = useState(null);
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -27,7 +33,7 @@ const Usuario = () => {
       } catch (error) {
         console.error("Erro ao carregar usuários:", error);
       } finally {
-        setLoading(false); // Finaliza o loading
+        setLoading(false);
       }
     };
 
@@ -38,6 +44,7 @@ const Usuario = () => {
     if (user) {
       setName(user.displayName || '');
       setEmail(user.email || '');
+      setAvatarUrl(user.avatarUrl || perfil);
     }
   }, [user]);
 
@@ -53,6 +60,7 @@ const Usuario = () => {
       birthDate,
       phone,
       role,
+      avatarUrl: avatarUrl || perfil,
     };
 
     try {
@@ -60,11 +68,11 @@ const Usuario = () => {
         await updateUserProfile(profileData, editingUserId);
         alert('Perfil atualizado com sucesso!');
       } else {
-        await updateUserProfile(profileData);
+        const newDocRef = doc(db, "users", editingUserId || "guest");
+        await setDoc(newDocRef, profileData);
         alert('Usuário cadastrado com sucesso!');
       }
 
-      // Limpa os campos após o salvamento
       setEditingUserId(null);
       setName('');
       setSurname('');
@@ -72,8 +80,8 @@ const Usuario = () => {
       setBirthDate('');
       setPhone('');
       setRole('');
+      setImageAvatar(null);
 
-      // Atualiza a lista de usuários
       const userList = await fetchUsers();
       setUsers(userList);
     } catch (error) {
@@ -89,6 +97,7 @@ const Usuario = () => {
     setBirthDate(user.birthDate);
     setPhone(user.phone);
     setRole(user.role);
+    setAvatarUrl(user.avatarUrl);
   };
 
   const handleDelete = async (id) => {
@@ -106,103 +115,118 @@ const Usuario = () => {
   };
 
   if (loading) {
-    return <p>Carregando usuários...</p>; // Mensagem de loading
+    return <p>Carregando usuários...</p>;
   }
+
+  const handleFile = (e) => {
+    if (e.target.files[0]) {
+      const image = e.target.files[0];
+      if (image.type === 'image/jpeg' || image.type === 'image/png') {
+        setImageAvatar(image);
+        setAvatarUrl(URL.createObjectURL(image));
+      } else {
+        alert("Envie uma imagem do tipo PNG ou JPEG");
+        setImageAvatar(null);
+      }
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!imageAvatar) return;
+
+    const userId = user ? user.uid : "guest";
+    const uploadRef = ref(storage, `images/${userId}/${imageAvatar.name}`);
+    
+    try {
+      const snapshot = await uploadBytes(uploadRef, imageAvatar);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      setAvatarUrl(downloadURL);
+
+      // Salva a URL da imagem no Firestore para o usuário atual ou "guest"
+      const docRef = doc(db, "users", userId);
+      await updateDoc(docRef, { avatarUrl: downloadURL });
+
+      alert("Foto de perfil atualizada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar foto de perfil:", error);
+      alert("Erro ao atualizar foto de perfil. Tente novamente.");
+    }
+  };
 
   return (
     <div className="row">
       <Sidebar />
-        <Header />
-        
-        <div className='container'>
-
-          <h3 className="titulo">Gerenciar Funcionários</h3>
-          <div className="img-perfil">
-            <img src={perfil} alt="Foto de Perfil" />
-            <p className="m-0">Foto de Perfil</p>
-          </div>
-
-          <div className="row">
-            <li className="input-container col-md-6 col-sm-12">
-              <span>Nome</span>
-              <input 
-                type="text" 
-                className="input-text" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
-                required 
-              />
-            </li>
-
-            <li className="input-container col-md-6 col-sm-12">
-              <span>Sobrenome</span>
-              <input 
-                type="text" 
-                className="input-text" 
-                value={surname} 
-                onChange={(e) => setSurname(e.target.value)} 
-              />
-            </li>
-
-            <li className="input-container col-md-6 col-sm-12">
-              <span>Email</span>
-              <input 
-                type="email" 
-                className="input-text" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-              />
-            </li>
-
-            <li className="input-container col-md-6 col-sm-12">
-              <span>Data de nascimento</span>
-              <input 
-                type="date" 
-                className="input-text" 
-                value={birthDate} 
-                onChange={(e) => setBirthDate(e.target.value)} 
-              />
-            </li>
-
-            <li className="input-container col-md-6 col-sm-12">
-              <span>Celular</span>
-              <input 
-                type="text" 
-                className="input-text" 
-                value={phone} 
-                onChange={(e) => setPhone(e.target.value)} 
-              />
-            </li>
-
-            <li className="input-container col-md-6 col-sm-12">
-              <span>Função</span>
-              <input 
-                type="text" 
-                className="input-text" 
-                value={role} 
-                onChange={(e) => setRole(e.target.value)} 
-              />
-            </li>
-          </div>
-
-          <button className="botao-salvar" onClick={handleSave}>Salvar</button>
-
-          <h3>Lista de Funcionários</h3>
-          <ul className="lista-funcionarios">
-            {users.length > 0 ? users.map((user) => (
-              <li key={user.id}>
-                {user.displayName || "Nome não disponível"} - {user.email} 
-                <div className='buttons'>
-                  <button onClick={() => handleEdit(user)} className='buttonEdit'>Editar</button>
-                  <button onClick={() => handleDelete(user.id)} className='buttonEdit'>Excluir</button>
-                </div>
-              </li>
-            )) : <p>Nenhum funcionário cadastrado.</p>}
-          </ul>
+      <Header />
+      <div className='container'>
+        <div>
+        <h3 className="titulo">Gerenciar Funcionários</h3>
         </div>
+        
+        <div className="img-perfil">
+          <label className="label-avatar">
+            <span>
+              <FiUpload color="#FFF" size={25} />
+            </span>
+            <input type="file" accept="image/*" onChange={handleFile} /> <br/>
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Foto de perfil" width={250} height={250} />
+            ) : (
+              <img src={perfil} alt="Foto de perfil" width={250} height={250} />
+            )}
+          </label>
+          <button onClick={handleUpload} className="botao-salvar">Salvar Foto</button>
+        </div>
+
+        <div className="row">
+          <div className="input-container col-md-6 col-sm-12">
+            <span>Nome</span>
+            <input type="text" className="input-text" value={name} onChange={(e) => setName(e.target.value)} required />
+          </div>
+
+          <div className="input-container col-md-6 col-sm-12">
+            <span>Sobrenome</span>
+            <input type="text" className="input-text" value={surname} onChange={(e) => setSurname(e.target.value)} />
+          </div>
+
+          <div className="input-container col-md-6 col-sm-12">
+            <span>Email</span>
+            <input type="email" className="input-text" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
+
+          <div className="input-container col-md-6 col-sm-12">
+            <span>Data de nascimento</span>
+            <input type="date" className="input-text" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+          </div>
+
+          <div className="input-container col-md-6 col-sm-12">
+            <span>Celular</span>
+            <input type="text" className="input-text" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          </div>
+
+          <div className="input-container col-md-6 col-sm-12">
+            <span>Função</span>
+            <input type="text" className="input-text" value={role} onChange={(e) => setRole(e.target.value)} />
+          </div>
+        </div>
+
+        <button className="botao-salvar" onClick={handleSave}>Salvar</button>
+
+        <h3>Lista de Funcionários</h3>
+        <ul className="lista-funcionarios">
+          {users.length > 0 ? users.map((user) => (
+            <li key={user.id}>
+              <img src={user.avatarUrl || perfil} alt="Foto do usuário" width={50} height={50} style={{ marginRight: '10px' }} />
+              {user.displayName || "Nome não disponível"} - {user.email}
+              <div className='buttons'>
+                <button onClick={() => handleEdit(user)} className='buttonEdit'>Editar</button>
+                <button onClick={() => handleDelete(user.id)} className='buttonEdit'>Excluir</button>
+              </div>
+            </li>
+          )) : <p>Nenhum funcionário cadastrado.</p>}
+        </ul>
       </div>
-  
+    </div>
   );
 };
 

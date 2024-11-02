@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
 import '../styles/index.css'; 
-import AdicionarProntuario from './adicionarProntuario.js'; // Corrigido o nome do arquivo
+import AdicionarProntuario from './adicionarProntuario.js'; 
 import '../styles/prontuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,11 +11,10 @@ const Prontuario = () => {
   const [showForm, setShowForm] = useState(false);
   const [prontuarioParaEditar, setProntuarioParaEditar] = useState(null);
 
-  // Função para carregar os prontuários do banco de dados
   const loadProntuarios = async () => {
     try {
       const response = await fetch('http://localhost:5000/prontuarios', {
-        credentials: 'include', // Inclui cookies de sessão na requisição
+        credentials: 'include',
       });
       if (!response.ok) {
         throw new Error('Erro ao carregar prontuários');
@@ -26,7 +25,7 @@ const Prontuario = () => {
       console.error('Erro ao carregar prontuários:', error);
     }
   };
-  
+
   useEffect(() => {
     loadProntuarios();
   }, []);
@@ -73,46 +72,47 @@ const Prontuario = () => {
   };
 
   return (
-    <div>
+    <div className='container-prontuario'>
       <Sidebar />
       <div>
         <Header />
         <div>
           <div>
-          <h1>Prontuários</h1>
-          <button onClick={() => setShowForm(true)}>Adicionar Prontuário</button>
-          {showForm && (
-            <AdicionarProntuario
-              prontuario={prontuarioParaEditar}
-              adicionarProntuario={adicionarProntuario}
-              setShowForm={setShowForm}
-            />
-          )}
-          <table>
-            <thead>
-              <tr>
-                <th>Nome do Paciente</th>
-                <th>Número</th>
-                <th>Status</th>
-                <th>Data</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {prontuarios.map((prontuario) => (
-                <tr key={prontuario.id}>
-                  <td>{prontuario.nomePaciente}</td>
-                  <td>{prontuario.numero}</td>
-                  <td>{prontuario.status}</td>
-                  <td>{prontuario.data}</td>
-                  <td>
-                    <button onClick={() => editarProntuario(prontuario)}>Editar</button>
-                    <button onClick={() => excluirProntuario(prontuario.id)}>Excluir</button>
-                  </td>
+            <div className='titulo'><h1>Prontuários</h1></div>
+            <button className='botao-adicionar' onClick={() => setShowForm(true)}>Adicionar Prontuário</button>
+            {showForm && (
+              <AdicionarProntuario
+                prontuario={prontuarioParaEditar}
+                adicionarProntuario={adicionarProntuario}
+                setShowForm={setShowForm}
+              />
+            )}
+            <div className='lista-e'><h3>Lista de Prontuários</h3></div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome do Paciente</th>
+                  <th>Número</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                  <th>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {prontuarios.map((prontuario) => (
+                  <tr key={prontuario.id}>
+                    <td>{prontuario.nomePaciente}</td>
+                    <td>{prontuario.numero}</td>
+                    <td>{prontuario.status}</td>
+                    <td>{prontuario.data}</td>
+                    <td>
+                      <button className='botao-editar' onClick={() => editarProntuario(prontuario)}>Editar</button>
+                      <button className='botao-editar' onClick={() => excluirProntuario(prontuario.id)}>Excluir</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
