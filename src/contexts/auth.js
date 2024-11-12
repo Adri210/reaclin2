@@ -7,11 +7,11 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    // Função para buscar todos os usuários da coleção 'users'
+    
     const fetchUsers = async () => {
         try {
-            const usersRef = collection(db, 'users'); // Referenciando a coleção
-            const snapshot = await getDocs(usersRef); // Buscando documentos
+            const usersRef = collection(db, 'users'); 
+            const snapshot = await getDocs(usersRef); 
             const userList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             return userList;
         } catch (error) {
@@ -20,16 +20,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Função para criar ou atualizar o perfil de um usuário
+    
     const updateUserProfile = async (profileData, userId) => {
         try {
             if (userId) {
-                const userDoc = doc(db, 'users', userId); // Referência ao documento do usuário
+                const userDoc = doc(db, 'users', userId); 
                 await updateDoc(userDoc, profileData);
                 console.log(`Usuário com ID ${userId} atualizado com sucesso!`);
             } else {
-                const usersRef = collection(db, 'users'); // Referência à coleção 'users'
-                await addDoc(usersRef, profileData); // Adiciona um novo documento
+                const usersRef = collection(db, 'users'); 
+                await addDoc(usersRef, profileData); 
                 console.log('Novo usuário criado com sucesso!');
             }
         } catch (error) {
@@ -37,10 +37,10 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // Função para excluir um usuário da coleção 'users'
+    
     const deleteUser = async (userId) => {
         try {
-            const userDoc = doc(db, 'users', userId); // Referência ao documento do usuário
+            const userDoc = doc(db, 'users', userId); 
             await deleteDoc(userDoc);
             console.log("Usuário deletado com sucesso!");
         } catch (error) {

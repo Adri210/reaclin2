@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import '../styles/index.css';
 import moment from 'moment';
 import Sidebar from '../componentes/sidebar.js';
-import { db } from '../firebaseConection.js'; // Importe sua conexão com o Firebase
+import { db } from '../firebaseConection.js';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../styles/Agenda.css';
 
-// Configurar o localizador para o moment
 moment.locale('pt-br');
 const localizer = momentLocalizer(moment);
 
-// Mensagens traduzidas para português
 const messages = {
   allDay: 'Dia Inteiro',
   previous: '<',
@@ -27,29 +24,7 @@ const messages = {
   event: 'Evento',
   noEventsInRange: 'Não há eventos neste período.',
   showMore: (total) => `+ Ver mais (${total})`,
-  // Adicione as traduções dos dias da semana
-  sunday: 'Domingo',
-  monday: 'Segunda-feira',
-  tuesday: 'Terça-feira',
-  wednesday: 'Quarta-feira',
-  thursday: 'Quinta-feira',
-  friday: 'Sexta-feira',
-  saturday: 'Sábado',
-  // Adicione as traduções dos meses
-  january: 'Janeiro',
-  february: 'Fevereiro',
-  march: 'Março',
-  april: 'Abril',
-  may: 'Maio',
-  june: 'Junho',
-  july: 'Julho',
-  august: 'Agosto',
-  september: 'Setembro',
-  october: 'Outubro',
-  november: 'Novembro',
-  december: 'Dezembro',
 };
-
 
 const Agenda = () => {
   const [events, setEvents] = useState([]);
@@ -63,52 +38,54 @@ const Agenda = () => {
     estagiario: '',
   });
 
-  // Carregar eventos do Firestore
-  useEffect(() => {
-    const loadEvents = async () => {
-      const eventsCollection = collection(db, 'events'); // Referência à coleção
-      const snapshot = await getDocs(eventsCollection); // Obtém documentos da coleção
+  
+  const loadEvents = async () => {
+    try {
+      const eventsCollection = collection(db, 'events');
+      const snapshot = await getDocs(eventsCollection);
       const eventsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
+        start: doc.data().start.toDate(), 
+        end: doc.data().end.toDate(), 
       }));
       setEvents(eventsData);
-    };
+    } catch (error) {
+      console.error('Erro ao carregar eventos:', error);
+    }
+  };
 
+  
+  useEffect(() => {
     loadEvents();
   }, []);
 
-  // Selecionar evento
   const handleSelectEvent = (event) => {
     setFormData(event);
     setCurrentEvent(event);
     setFormVisible(true);
   };
 
-  // Selecionar slot no calendário
   const handleSelectSlot = (slotInfo) => {
     const start = slotInfo.start;
-    const end = moment(start).add(1, 'hour').toDate(); // Define a duração do evento como 1 hora
+    const end = moment(start).add(1, 'hour').toDate();
     setFormData({ ...formData, start, end });
     setCurrentEvent(null);
     setFormVisible(true);
   };
 
-  // Manipular o envio do formulário
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (currentEvent) {
-        // Atualizar evento
-        const eventDoc = doc(db, 'events', currentEvent.id); // Referência ao documento
-        await updateDoc(eventDoc, formData); // Atualiza no Firestore
+        const eventDoc = doc(db, 'events', currentEvent.id);
+        await updateDoc(eventDoc, formData);
         setEvents((prev) =>
           prev.map((event) => (event.id === currentEvent.id ? { ...formData, id: currentEvent.id } : event))
         );
       } else {
-        // Adicionar evento
-        const newDocRef = await addDoc(collection(db, 'events'), { ...formData }); // Adiciona no Firestore
-        setEvents((prev) => [...prev, { ...formData, id: newDocRef.id }]); // Adiciona ID gerado pelo Firestore
+        const newDocRef = await addDoc(collection(db, 'events'), { ...formData });
+        setEvents((prev) => [...prev, { ...formData, id: newDocRef.id }]);
       }
       setFormVisible(false);
       setFormData({ title: '', start: new Date(), end: new Date(), specialidade: '', estagiario: '' });
@@ -117,12 +94,11 @@ const Agenda = () => {
     }
   };
 
-  // Manipular exclusão de eventos
   const handleDelete = async () => {
     if (currentEvent) {
       try {
-        const eventDoc = doc(db, 'events', currentEvent.id); // Referência ao documento
-        await deleteDoc(eventDoc); // Deleta do Firestore
+        const eventDoc = doc(db, 'events', currentEvent.id);
+        await deleteDoc(eventDoc);
         setEvents((prev) => prev.filter((event) => event.id !== currentEvent.id));
         setFormVisible(false);
       } catch (error) {
@@ -145,10 +121,10 @@ const Agenda = () => {
             onSelectEvent={handleSelectEvent}
             selectable
             onSelectSlot={handleSelectSlot}
-            step={60} // Passo de 60 minutos
-            timeslots={1} // Número de slots por hora
-            defaultView="week" // Exibir a visão semanal por padrão
-            messages={messages} // Adiciona as mensagens traduzidas
+            step={60}
+            timeslots={1}
+            defaultView="week"
+            messages={messages}
           />
         </div>
         {formVisible && (

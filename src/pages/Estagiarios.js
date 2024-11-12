@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../componentes/sidebar.js';
 import Header from '../componentes/Header.js';
-import AdicionarEstagiario from './adicionar2.js'; // Corrigido o nome do arquivo
+import AdicionarEstagiario from './adicionar2.js'; 
 import '../styles/estagiario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -10,7 +10,7 @@ const Estagiario = () => {
   const [showForm, setShowForm] = useState(false);
   const [estagiarioParaEditar, setEstagiarioParaEditar] = useState(null);
 
-  // Função para carregar os estagiários do banco de dados
+  
   const loadEstagiarios = async () => {
     try {
       const response = await fetch('http://localhost:5000/estagiarios');

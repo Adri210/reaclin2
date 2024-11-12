@@ -20,8 +20,7 @@ const LoginForm = () => {
                     setUsuario(true);
                     user.getIdToken().then((token) => {
                         Cookies.set('authToken', token, { expires: 1 });
-                        // Configura a expiração da sessão
-                        setTimeout(handleLogout, 3600000); // 30 segundos
+                        setTimeout(handleLogout,600000);
                     });
                 } else {
                     setUsuario(false);
@@ -31,20 +30,22 @@ const LoginForm = () => {
         };
         verificarLogin();
 
-        // Verificar se a sessão foi encerrada a cada 1 segundo
+        
         const sessionCheckInterval = setInterval(() => {
             if (!Cookies.get('authToken')) {
                 handleLogout();
             }
-        }, 1000);
+        }, 600000);
 
-        return () => clearInterval(sessionCheckInterval); // Limpa o intervalo ao desmontar
+        return () => clearInterval(sessionCheckInterval); 
     }, []);
 
     const handleLogout = async () => {
-        await auth.signOut(); // Logout do Firebase
-        Cookies.remove('authToken'); // Remover cookie do token
-        navigate('/'); // Redirecionar para a página inicial
+        await auth.signOut(); 
+        Cookies.remove('authToken');
+        setEmail('');
+        setSenha('');
+        navigate('/'); 
     };
 
     const logarUsuario = async () => {
@@ -53,7 +54,7 @@ const LoginForm = () => {
             alert("Usuário logado com sucesso");
             setEmail("");
             setSenha("");
-    
+
             // Obter e armazenar o token no cookie
             const token = await value.user.getIdToken();
             const response = await fetch("http://localhost:5000/login", {
@@ -62,26 +63,25 @@ const LoginForm = () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ userId: email, password: senha }), // Use email e senha para login
+                body: JSON.stringify({ userId: email, password: senha }), 
                 credentials: 'include',
             });
-    
+
             if (response.ok) {
-                navigate('/usuario'); // Navegar após login bem-sucedido
-            } else {
-                const errorData = await response.json(); // Obtenha detalhes do erro
+                navigate('/usuario'); 
+                const errorData = await response.json(); 
                 throw new Error(errorData.message || "Erro ao criar sessão.");
             }
         } catch (error) {
             alert(error.message || "Erro ao fazer login!");
-            Cookies.remove('authToken'); // Remover token em caso de erro
+            Cookies.remove('authToken'); 
         }
     };
 
     return (
         <div className="container">
             <div className="form-container sign-in">
-                <h2>Usuários</h2>
+                <h2>Login</h2>
                 <label>Email:</label>
                 <input
                     type="email"

@@ -9,7 +9,7 @@ import Cadastrar from './pages/cadastrar.js';
 import Cookies from 'js-cookie';
 
 function RequireAuth({ children }) {
-    const isLoggedIn = Cookies.get('authToken'); // Verifica o cookie de autenticação
+    const isLoggedIn = Cookies.get('authToken'); 
 
     if (!isLoggedIn) {
         alert("Você precisa fazer login para acessar esta página.");

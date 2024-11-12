@@ -10,8 +10,7 @@ import {
   updateDoc,
   doc,
   deleteDoc
-} from 'firebase/firestore'; // Importar funções do Firestore
-
+} from 'firebase/firestore'; 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,29 +19,29 @@ const PORT = process.env.PORT || 5000;
 app.use(cookieParser());
 app.use(
   session({
-    secret: 'seuSegredoSuperSecreto', // Use uma string complexa em produção
+    secret: 'seuSegredoSuperSecreto',
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60, 
-      httpOnly: true, // Protege contra ataques XSS
-      secure: process.env.NODE_ENV === 'production', // Configura para HTTPS em produção
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', 
     },
   })
 );
 
 // Configurações de CORS
 app.use(cors({
-  origin: 'http://localhost:3000', // Ajuste para o domínio correto
+  origin: 'http://localhost:3000', 
   credentials: true,
 }));
 app.use(express.json());
 
 
 app.post('/login', (req, res) => {
-  const { userId, password } = req.body; // Use o email e a senha
+  const { userId, password } = req.body;
   if (userId && password) {
-      req.session.userId = userId; // Salva o ID do usuário na sessão
+      req.session.userId = userId;
       res.json({ message: 'Login bem-sucedido' });
   } else {
       res.status(400).json({ message: 'ID de usuário ou senha não fornecidos' });
@@ -52,25 +51,14 @@ app.post('/login', (req, res) => {
 
 // Rota de logout para encerrar a sessão
 app.post('/logout', (req, res) => {
-  console.log('Logout solicitado'); // Log para depuração
+  console.log('Logout solicitado');
   req.session.destroy(() => {
-    res.clearCookie('connect.sid'); // Limpa o cookie de sessão
+    res.clearCookie('connect.sid'); 
     res.json({ message: 'Logout bem-sucedido' });
   });
 });
 
-// Rota para listar prontuários (autenticada)
-app.get('/prontuarios',  async (req, res) => {
-  try {
-    const prontuariosCol = collection(db, 'prontuarios');
-    const prontuariosSnapshot = await getDocs(prontuariosCol);
-    const prontuariosList = prontuariosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    res.json(prontuariosList);
-  } catch (error) {
-    console.error('Erro ao listar prontuários:', error);
-    res.status(500).json({ message: 'Erro ao listar prontuários' });
-  }
-});
+
 
 // Rota para listar estagiários
 app.get('/estagiarios', async (req, res) => {
@@ -171,6 +159,19 @@ app.delete('/prontuarios/:id', async (req, res) => {
   } catch (error) {
     console.error('Erro ao deletar prontuário:', error);
     res.status(500).json({ message: 'Erro ao deletar prontuário' });
+  }
+});
+
+// Rota para listar prontuários 
+app.get('/prontuarios',  async (req, res) => {
+  try {
+    const prontuariosCol = collection(db, 'prontuarios');
+    const prontuariosSnapshot = await getDocs(prontuariosCol);
+    const prontuariosList = prontuariosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.json(prontuariosList);
+  } catch (error) {
+    console.error('Erro ao listar prontuários:', error);
+    res.status(500).json({ message: 'Erro ao listar prontuários' });
   }
 });
 

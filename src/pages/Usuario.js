@@ -143,7 +143,7 @@ const Usuario = () => {
       
       setAvatarUrl(downloadURL);
 
-      // Salva a URL da imagem no Firestore para o usuário atual ou "guest"
+      
       const docRef = doc(db, "users", userId);
       await updateDoc(docRef, { avatarUrl: downloadURL });
 
