@@ -1,80 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import '../styles/loginForm.css';
-import logo from '../imagens/logo.png';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConection.js';
-import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { AuthContext } from '../contexts/authcontext.js'; 
+import logo from '../imagens/logo.png'; 
 import Cookies from 'js-cookie';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const navigate = useNavigate();
-    const [usuario, setUsuario] = useState(false);
-
-    useEffect(() => {
-        const verificarLogin = () => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    setUsuario(true);
-                    user.getIdToken().then((token) => {
-                        Cookies.set('authToken', token, { expires: 1 });
-                        setTimeout(handleLogout,600000);
-                    });
-                } else {
-                    setUsuario(false);
-                    Cookies.remove('authToken');
-                }
-            });
-        };
-        verificarLogin();
-
-        
-        const sessionCheckInterval = setInterval(() => {
-            if (!Cookies.get('authToken')) {
-                handleLogout();
-            }
-        }, 600000);
-
-        return () => clearInterval(sessionCheckInterval); 
-    }, []);
-
-    const handleLogout = async () => {
-        await auth.signOut(); 
-        Cookies.remove('authToken');
-        setEmail('');
-        setSenha('');
-        navigate('/'); 
-    };
+    const { setIsLoggedIn } = useContext(AuthContext); 
 
     const logarUsuario = async () => {
         try {
             const value = await signInWithEmailAndPassword(auth, email, senha);
-            alert("Usuário logado com sucesso");
-            setEmail("");
-            setSenha("");
-
-            // Obter e armazenar o token no cookie
+            setEmail('');
+            setSenha('');
+    
             const token = await value.user.getIdToken();
-            const response = await fetch("http://localhost:5000/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ userId: email, password: senha }), 
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                navigate('/usuario'); 
-                const errorData = await response.json(); 
-                throw new Error(errorData.message || "Erro ao criar sessão.");
-            }
+            Cookies.set('authToken', token, { expires: 1 });
+    
+            setIsLoggedIn(true); 
+    
+            navigate('/usuario');
         } catch (error) {
-            alert(error.message || "Erro ao fazer login!");
-            Cookies.remove('authToken'); 
+            alert(error.message || 'Erro ao fazer login!');
+            Cookies.remove('authToken');
+            setIsLoggedIn(false);  
         }
     };
 
@@ -113,6 +67,7 @@ const LoginForm = () => {
             </div>
         </div>
     );
+
 };
 
 export default LoginForm;

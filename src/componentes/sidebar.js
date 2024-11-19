@@ -42,7 +42,7 @@ const Sidebar = () => {
             </ul>
           </li>
           <li>
-            <NavLink to="/Agenda" className="nav-link px-3">
+            <NavLink to="/agenda" className="nav-link px-3">
               <img src={calendar} className="fs-4 bi-table" alt='Agenda' />
               <span className={`ms-1 d-none d-sm-inline space ${isMinimized ? 'd-none' : ''}`}>Agenda</span>
             </NavLink>

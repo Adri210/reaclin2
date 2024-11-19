@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { db } from '../firebaseConection.js'; // Certifique-se de que o caminho está correto
+import { db } from '../firebaseConection.js'; 
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 
 export const AuthContext = createContext();

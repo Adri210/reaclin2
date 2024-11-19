@@ -38,23 +38,36 @@ const Agenda = () => {
     estagiario: '',
   });
 
-  
   const loadEvents = async () => {
     try {
       const eventsCollection = collection(db, 'events');
       const snapshot = await getDocs(eventsCollection);
-      const eventsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        start: doc.data().start.toDate(), 
-        end: doc.data().end.toDate(), 
-      }));
+      const eventsData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        
+        
+        const start = data.start ? (data.start instanceof Date ? data.start : data.start.toDate()) : null;
+        const end = data.end ? (data.end instanceof Date ? data.end : data.end.toDate()) : null;
+        
+        
+        if (!start || !end) {
+          console.warn(`Evento sem data válida: ${doc.id}`);
+          return null;  
+        }
+  
+        return {
+          id: doc.id,
+          ...data,
+          start, 
+          end, 
+        };
+      }).filter(event => event !== null); 
+      
       setEvents(eventsData);
     } catch (error) {
       console.error('Erro ao carregar eventos:', error);
     }
   };
-
   
   useEffect(() => {
     loadEvents();
